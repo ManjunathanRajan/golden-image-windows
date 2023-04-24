@@ -15,7 +15,5 @@ phases:
       - 'export GITHUB_RELEASE_TAG=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/ManjunathanRajan/GI_AWS/releases/latest | jq -r ".tag_name")'
   build:
     commands:
-      - echo "Building application..."
-      # Add your application build commands here
-      - echo "Creating golden image using Packer..."
-      - packer build packer.json
+      - echo "Building golden image..."
+      - packer build -var "github_release_tag=${GITHUB_RELEASE_TAG}" packer.json
