@@ -13,6 +13,8 @@ phases:
   pre_build:
     commands:
       - echo "Configuring Git credentials..."
+      - git config --global credential.helper '!aws codebuild credential-helper $@'
+      - git config --global credential.UseHttpPath true
       - git config --global user.email "manjun566@gmail.com"
       - git config --global user.name "ManjunathanRajan"
       - echo "Fetching latest GitHub release tag..."
