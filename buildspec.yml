@@ -16,4 +16,4 @@ phases:
   build:
     commands:
       - echo "Building golden image..."
-      - packer build -var "github_release_tag=${GITHUB_RELEASE_TAG}" packer.json
+      - packer build -debug -var "github_release_tag=${GITHUB_RELEASE_TAG}" packer.json
