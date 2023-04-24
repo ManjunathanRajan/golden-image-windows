@@ -21,7 +21,7 @@ phases:
       - git pull origin main
       - export CURRENT_RELEASE_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
       - echo $CURRENT_RELEASE_TAG
-      - export NEW_RELEASE_TAG=v$(echo $CURRENT_RELEASE_TAG | cut -c2- | awk -F. '{$NF+=1;}1' | sed 's/ /./g')
+      - export NEW_RELEASE_TAG=$(echo "v$(echo $CURRENT_RELEASE_TAG | cut -c2- | awk -F. '{$NF+=1;}1' | tr ' ' '.')")
       - echo $NEW_RELEASE_TAG
       - echo "Creating and pushing new release tag: ${NEW_RELEASE_TAG} on the main branch"
       - git tag -a ${NEW_RELEASE_TAG} -m "Release ${NEW_RELEASE_TAG}"
