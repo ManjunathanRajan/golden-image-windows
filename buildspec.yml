@@ -4,7 +4,7 @@ phases:
   install:
     runtime-versions:
       # Specify the runtime versions required for your application (e.g., python, nodejs, etc.)
-      python: 3.8
+      python: 3.9
   pre_build:
     commands:
       - echo "Installing Packer..."
