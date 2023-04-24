@@ -33,3 +33,12 @@ phases:
       - packer validate packer.json
       - echo "Building golden image..."
       - packer build -var "github_release_tag=${GITHUB_RELEASE_TAG}" packer.json
+  post_build:
+    commands:
+      - echo "Tagging GitHub release..."
+      - git config --global user.email "manjun566@gmail.com"
+      - git config --global user.name "ManjunathanRajan"
+      - export RELEASE_VERSION=$(git describe --tags --abbrev=0)
+      - export NEW_RELEASE_VERSION="v$(echo $RELEASE_VERSION | cut -c2- | awk -F. '{$NF+=1;}1' | sed 's/ /./g')"
+      - git tag -a ${NEW_RELEASE_VERSION} -m "Release ${NEW_RELEASE_VERSION}"
+      - git push origin ${NEW_RELEASE_VERSION}
