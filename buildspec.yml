@@ -1,9 +1,7 @@
 version: 0.2
-
 env:
-  variables:
-    GITHUB_PAT: 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
-
+  secrets-manager:
+    GITHUB_PAT: pat_gh:PAT
 phases:
   install:
     commands:
@@ -14,6 +12,10 @@ phases:
       - curl -o packer.zip https://releases.hashicorp.com/packer/1.7.8/packer_1.7.8_linux_amd64.zip
       - unzip packer.zip
       - sudo mv packer /usr/local/bin/
+      - echo "Installing AWS CLI..."
+      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - unzip awscliv2.zip
+      - sudo ./aws/install
   pre_build:
     commands:
       - echo "Configuring Git credentials..."
@@ -25,32 +27,13 @@ phases:
       - git fetch --tags
       - git checkout main
       - git pull origin main
-      - git checkout --orphan temp_branch
-      - git commit --allow-empty -m "Creating common ancestor commit"
-      - git checkout main
-      - git merge temp_branch --allow-unrelated-histories -m "Merge temp_branch to create common ancestor"
-      - git checkout OS-Release
-      - git merge temp_branch --allow-unrelated-histories -m "Merge temp_branch to create common ancestor"
-      - git branch -D temp_branch
-      - git pull origin OS-Release
-      - export CURRENT_RELEASE_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-      - echo $CURRENT_RELEASE_TAG
-      - export NEW_RELEASE_TAG=$(echo "v$(echo $CURRENT_RELEASE_TAG | cut -c2- | awk -F. '{$NF+=1;}1' OFS='.')")
-      - echo $NEW_RELEASE_TAG
-      - git merge OS-Release --no-ff -m "Merge OS-Release"
-      - git tag -a ${NEW_RELEASE_TAG} -m "Release ${NEW_RELEASE_TAG}"
-      - git push origin main
-      - cat ~/.netrc
   build:
     commands:
       - echo "Validating Packer template..."
       - packer validate packer.json
       - echo "Building golden image..."
-      - packer build -var "github_release_tag=${GITHUB_RELEASE_TAG}" packer.json
+      - packer build -var "github_pat=${GITHUB_PAT}" packer.json
   post_build:
     commands:
-      - echo "Tagging GitHub release..."
-      - export RELEASE_VERSION=$(git describe --tags --abbrev=0)
-      - export NEW_RELEASE_VERSION="v$(echo $RELEASE_VERSION | cut -c2- | awk -F. '{$NF+=1;}1' | sed 's/ /./g')"
-      - git tag -a ${NEW_RELEASE_VERSION} -m "Release ${NEW_RELEASE_VERSION}"
-      - ./git_retry_push.sh "git push origin ${NEW_RELEASE_VERSION}"
+      - echo "Post-build actions..."
+      - echo "Golden image build complete."
