@@ -28,6 +28,17 @@
     {
       "type": "shell",
       "inline": [
+        "echo 'Waiting for SSH connection...'",
+        "while ! nc -z localhost 22; do",
+        "  sleep 5",
+        "done",
+        "echo 'SSH connection is available.'"
+      ],
+      "pause_before": "10s"
+    },
+    {
+      "type": "shell",
+      "inline": [
         "INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)",
         "REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/[a-z]$//')",
         "aws configure set region ${REGION}",
