@@ -21,8 +21,8 @@ phases:
       - git config --global credential.UseHttpPath true
       - git config --global user.email "manjun566@gmail.com"
       - git config --global user.name "ManjunathanRajan"
-      - git config --global url."https://github.com/".insteadOf git@github.com
-      - git config --global url."https://${GITHUB_ACCESS_TOKEN}:x-oauth-basic@github.com/".insteadOf https://github.com/
+      - git config --global url."https://github.com/"
+      - git config --global url."https://${GITHUB_ACCESS_TOKEN}:x-oauth-basic@github.com/"
       - echo "Fetching latest GitHub release tag..."
       - git fetch --tags
       - git checkout main
