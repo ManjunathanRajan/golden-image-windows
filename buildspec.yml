@@ -18,9 +18,8 @@ phases:
     commands:
       - echo "Configuring Git credentials..."
       - git config --global user.email "manjun566@gmail.com"
-      - git config --global user.name "ManjunathanRajan"
       - git config --global credential.helper store
-      - echo "machine github.com login ManjunathanRajan password ${GITHUB_PAT}" > ~/.netrc
+      - echo "machine github.com login manjun566@gmail.com password ${GITHUB_PAT}" > ~/.netrc
       - git remote set-url origin https://github.com/ManjunathanRajan/GI_AWS.git
       - echo "Fetching latest GitHub release tag..."
       - git fetch --tags
