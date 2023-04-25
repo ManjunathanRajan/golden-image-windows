@@ -22,7 +22,7 @@ phases:
       - git config --global user.email "manjun566@gmail.com"
       - git config --global credential.helper cache
       - echo "machine github.com login manjun566@gmail.com password ${GITHUB_PAT}" > ~/.netrc
-      - git remote set-url origin git@github.com:ManjunathanRajan/GI_AWS.git
+      - git remote set-url origin https://manjun566:${GITHUB_PAT}@github.com/ManjunathanRajan/GI_AWS.git
       - echo "Fetching latest GitHub release tag..."
       - git fetch --tags
       - git checkout main
