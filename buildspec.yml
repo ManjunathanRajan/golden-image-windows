@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   secrets-manager:
-    GITHUB_SSH_KEY: GitHubSSHKey.PrivateKey
+    GITHUB_SSH_KEY: GitHubSSHKey
 
 phases:
   install:
