@@ -10,39 +10,55 @@
       "region": "{{user `aws_region`}}",
       "access_key": "{{user `aws_access_key`}}",
       "secret_key": "{{user `aws_secret_key`}}",
+      "instance_type": "t2.micro",
       "source_ami_filter": {
         "filters": {
           "virtualization-type": "hvm",
-          "name": "amzn2-ami-hvm-*-x86_64-gp2",
+          "name": "Windows_Server-2019-English-Full-Base-*",
           "root-device-type": "ebs"
         },
         "owners": ["amazon"],
         "most_recent": true
       },
-      "instance_type": "t2.micro",
-      "ssh_username": "ec2-user",
-      "ami_name": "my-golden-image-{{timestamp}}"
+      "communicator": "winrm",
+      "winrm_username": "Administrator",
+      "ami_name": "my-windows-ami-{{timestamp}}"
     }
   ],
   "provisioners": [
     {
-      "type": "shell",
+      "type": "powershell",
       "inline": [
-        "echo 'Waiting for SSH connection...'",
-        "while ! nc -z localhost 22; do",
-        "  sleep 5",
-        "done",
-        "echo 'SSH connection is available.'"
+        "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force",
+        "Set-Item WSMan:\\localhost\\Service\\AllowUnencrypted -Value True",
+        "Install-WindowsFeature -Name Web-Server",
+        "Invoke-WebRequest -Uri https://awscli.amazonaws.com/awscli-exe-windows-x86_64.zip -OutFile awscliv2.zip",
+        "Expand-Archive -Path awscliv2.zip -DestinationPath $env:ProgramFiles",
+        "C:\\Program Files\\awscli\\bin\\aws.exe s3 cp s3://my-bucket/my-file.txt C:\\inetpub\\wwwroot\\my-file.txt",
+        {
+          "type": "powershell",
+          "script": "$Password = (Invoke-WebRequest -Uri http://169.254.169.254/latest/meta-data/instance-id -Headers @{Metadata='true'}).Content",
+          "environment_vars": [
+            "WINRM_PASSWORD={{ .Vars.Password }}"
+          ]
+        },
+        {
+          "type": "windows-restart",
+          "restart_timeout": "15m",
+          "restart_command": "powershell.exe -NonInteractive -Command 'Restart-Computer -Force'"
+        }
       ],
       "pause_before": "10s"
     },
     {
-      "type": "shell",
+      "type": "file",
+      "source": "answer_files/Unattend.xml",
+      "destination": "c:/Windows/Panther/Unattend/Unattend.xml"
+    },
+    {
+      "type": "powershell",
       "inline": [
-        "INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)",
-        "REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/[a-z]$//')",
-        "aws configure set region ${REGION}",
-        "aws ssm send-command --instance-ids ${INSTANCE_ID} --document-name 'AWS-RunShellScript' --parameters commands=[\"sudo yum update -y\", \"sudo yum install -y amazon-ssm-agent\", \"sudo systemctl enable amazon-ssm-agent\", \"sudo systemctl start amazon-ssm-agent\", \"sudo yum install -y git zip unzip\", \"echo Installing AWS CLI...\", \"curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip\", \"unzip awscliv2.zip\", \"sudo ./aws/install\", \"echo Installing Docker...\", \"sudo amazon-linux-extras install docker -y\", \"sudo systemctl enable docker\", \"sudo systemctl start docker\", \"sudo usermod -aG docker ec2-user\", \"echo Installing Node.js and npm...\", \"curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -\", \"sudo yum install -y nodejs\", \"sudo mkdir /var/www/my-app\", \"sudo chown ec2-user /var/www/my-app\", \"cd /var/www/my-app\", \"cd my-app\", \"npm install\", \"echo \\'<h1>Hello World</h1>\\' > index.html\", \"npm start\"] --query 'Command.CommandId' --output text"
+        "C:\\Windows\\System32\\Sysprep\\Sysprep.exe /generalize /oobe /shutdown /unattend:c:/Windows/Panther/Unattend/Unattend.xml"
       ],
       "pause_before": "10s"
     }
