@@ -30,6 +30,16 @@ phases:
     commands:
       - echo "Validating Packer template..."
       - packer validate packer.json
+      - echo "Checking for SSH connection..."
+      - |
+        echo 'Waiting for SSH connection...'
+        for i in {1..10}
+        do
+          nc -z -v -w5 <instance-public-ip> 22 && break
+          echo "SSH connection not available, retrying in 5 seconds..."
+          sleep 5
+        done
+        echo 'SSH connection is available.'
       - echo "Building golden image..."
       - packer build packer.json
   post_build:
