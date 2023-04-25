@@ -26,7 +26,7 @@ phases:
       - git merge OS-Release --no-ff -m "Merge OS-Release"
       - export NEW_RELEASE_TAG=$(echo "v$(echo $CURRENT_RELEASE_TAG | cut -c2- | awk -F. '{$NF+=1;}1' OFS='.')")
       - echo $NEW_RELEASE_TAG
-      - git tag -a ${NEW_RELEASE_TAG} -m "Release ${NEW_RELEASE_TAG}"
+      - git merge OS-Release --allow-unrelated-histories --no-ff -m "Merge OS-Release"
       - git config credential.helper store
       - echo "machine github.com login ManjunathanRajan password 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" > ~/.netrc
       - chmod 600 ~/.netrc
