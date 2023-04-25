@@ -37,10 +37,10 @@
         "C:\\Program Files\\awscli\\bin\\aws.exe s3 cp s3://my-bucket/my-file.txt C:\\inetpub\\wwwroot\\my-file.txt",
         {
           "type": "powershell",
-          "script": "$Password = (Invoke-WebRequest -Uri http://169.254.169.254/latest/meta-data/instance-id -Headers @{Metadata='true'}).Content",
-          "environment_vars": [
-            "WINRM_PASSWORD={{ .Vars.Password }}"
-          ]
+          "environment_vars": {
+            "WINRM_PASSWORD": "{{ .Vars.Password }}"
+          },
+          "script": "$Password = (Invoke-WebRequest -Uri http://169.254.169.254/latest/meta-data/instance-id -Headers @{Metadata='true'}).Content"
         },
         {
           "type": "windows-restart",
