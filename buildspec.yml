@@ -32,19 +32,19 @@ phases:
       - git pull origin OS-Release
       - export CURRENT_RELEASE_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
       - echo $CURRENT_RELEASE_TAG
+      - git checkout -b os-releasev2
+      - git tag -a ${CURRENT_RELEASE_TAG} -m "Release ${CURRENT_RELEASE_TAG}"
+      - git push origin os-releasev2
       - git checkout main
       - git pull origin main
-      - git merge OS-Release --allow-unrelated-histories --no-ff -m "Merge OS-Release"
-      - export NEW_RELEASE_TAG=$(echo "v$(echo $CURRENT_RELEASE_TAG | cut -c2- | awk -F. '{$NF+=1;}1' OFS='.')")
-      - echo $NEW_RELEASE_TAG
-      - git tag -a ${NEW_RELEASE_TAG} -m "Release ${NEW_RELEASE_TAG}"
-      - git push --verbose origin main
+      - git merge os-releasev2 -m "Merge os-releasev2 to main"
+      - git push origin main
   build:
     commands:
       - echo "Validating Packer template..."
       - packer validate packer.json
       - echo "Building golden image..."
-      - packer build -var "github_release_tag=${NEW_RELEASE_TAG}" packer.json
+      - packer build -var "github_release_tag=${GITHUB_RELEASE_TAG}" packer.json
   post_build:
     commands:
       - echo "Tagging GitHub release..."
