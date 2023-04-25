@@ -22,7 +22,7 @@ phases:
       - git config --global user.email "manjun566@gmail.com"
       - git config --global user.name "ManjunathanRajan"
       - echo "Fetching latest GitHub release tag..."
-      - git remote set-url origin https://$GITHUB_ACCESS_TOKEN@github.com/ManjunathanRajan/GI_AWS.git
+      - git remote set-url origin https://oauth2:${GITHUB_ACCESS_TOKEN}@github.com/ManjunathanRajan/GI_AWS.git
       - git fetch --tags
       - git checkout main
       - git pull origin main
@@ -44,7 +44,7 @@ phases:
       - echo "Tagging GitHub release..."
       - git config --global user.email "manjun566@gmail.com"
       - git config --global user.name "ManjunathanRajan"
-      - git remote set-url origin https://$GITHUB_ACCESS_TOKEN@github.com/ManjunathanRajan/GI_AWS.git
+      - git remote set-url origin https://oauth2:${GITHUB_ACCESS_TOKEN}@github.com/ManjunathanRajan/GI_AWS.git
       - export RELEASE_VERSION=$(git describe --tags --abbrev=0)
       - export NEW_RELEASE_VERSION="v$(echo $RELEASE_VERSION | cut -c2- | awk -F. '{$NF+=1;}1' | sed 's/ /./g')"
       - git tag -a ${NEW_RELEASE_VERSION} -m "Release ${NEW_RELEASE_VERSION}"
