@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  variables:
+    GITHUB_PAT: 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
+
 phases:
   install:
     commands:
@@ -10,15 +14,14 @@ phases:
       - curl -o packer.zip https://releases.hashicorp.com/packer/1.7.8/packer_1.7.8_linux_amd64.zip
       - unzip packer.zip
       - sudo mv packer /usr/local/bin/
-      - echo "Installing GitHub PAT token..."
-      - echo "machine github.com login ManjunathanRajan password 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" > ~/.netrc
-      - chmod 600 ~/.netrc
   pre_build:
     commands:
       - echo "Configuring Git credentials..."
-      - git config --global credential.helper store
       - git config --global user.email "manjun566@gmail.com"
       - git config --global user.name "ManjunathanRajan"
+      - git config --global credential.helper store
+      - echo "machine github.com login ManjunathanRajan password ${GITHUB_PAT}" > ~/.netrc
+      - git remote set-url origin https://github.com/ManjunathanRajan/GI_AWS.git
       - echo "Fetching latest GitHub release tag..."
       - git fetch --tags
       - git checkout main
