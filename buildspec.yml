@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   secrets-manager:
-    GITHUB_SSH_KEY: GitHubSSHKey
+    GITHUB_TOKEN: pat_gh
 
 phases:
   install:
@@ -17,10 +17,12 @@ phases:
   pre_build:
     commands:
       - echo "Configuring Git credentials..."
-      - echo -e "Host github.com\n  Hostname github.com\n  User git\n  IdentityFile /tmp/id_rsa\n  StrictHostKeyChecking no\n" >> ~/.ssh/config
-      - aws secretsmanager get-secret-value --secret-id GitHubSSHKey --query SecretString --output text > /tmp/id_rsa
-      - chmod 600 /tmp/id_rsa
-      - git remote set-url origin git@github.com:ManjunathanRajan/GI_AWS.git
+      - git config --global user.email "manjun566@gmail.com"
+      - git config --global user.name "ManjunathanRajan"
+      - git config --global credential.helper "store --file ~/.git-credentials"
+      - echo "https://github.com:${GITHUB_TOKEN}@github.com" > ~/.git-credentials
+      - chmod 0600 ~/.git-credentials
+      - git remote set-url origin https://github.com/ManjunathanRajan/GI_AWS.git
       - echo "Fetching latest GitHub release tag..."
       - git fetch --tags
       - git checkout main
@@ -41,8 +43,6 @@ phases:
   post_build:
     commands:
       - echo "Tagging GitHub release..."
-      - git config --global user.email "manjun566@gmail.com"
-      - git config --global user.name "ManjunathanRajan"
       - export RELEASE_VERSION=$(git describe --tags --abbrev=0)
       - export NEW_RELEASE_VERSION="v$(echo $RELEASE_VERSION | cut -c2- | awk -F. '{$NF+=1;}1' | sed 's/ /./g')"
       - git tag -a ${NEW_RELEASE_VERSION} -m "Release ${NEW_RELEASE_VERSION}"
