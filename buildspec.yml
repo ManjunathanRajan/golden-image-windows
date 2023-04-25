@@ -28,26 +28,28 @@ phases:
       - git remote set-url origin https://github.com/ManjunathanRajan/GI_AWS.git
       - echo "Fetching latest GitHub release tag..."
       - git fetch --tags
-      - git checkout main
-      - git pull origin main
+      - git checkout OS-Release
+      - git pull origin OS-Release
       - export CURRENT_RELEASE_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
       - echo $CURRENT_RELEASE_TAG
+      - git checkout main
+      - git pull origin main
+      - git merge OS-Release --no-ff -m "Merge OS-Release"
       - export NEW_RELEASE_TAG=$(echo "v$(echo $CURRENT_RELEASE_TAG | cut -c2- | awk -F. '{$NF+=1;}1' OFS='.')")
       - echo $NEW_RELEASE_TAG
       - git tag -a ${NEW_RELEASE_TAG} -m "Release ${NEW_RELEASE_TAG}"
-      - chmod +x git_retry_push.sh
-      - ./git_retry_push.sh "git push origin ${NEW_RELEASE_TAG}"
-      - export GITHUB_RELEASE_TAG=${NEW_RELEASE_TAG}
+      - git push origin main
+      - git push origin ${NEW_RELEASE_TAG}
   build:
     commands:
       - echo "Validating Packer template..."
       - packer validate packer.json
       - echo "Building golden image..."
-      - packer build -var "github_release_tag=${GITHUB_RELEASE_TAG}" packer.json
-  post_build:
-    commands:
-      - echo "Tagging GitHub release..."
-      - export RELEASE_VERSION=$(git describe --tags --abbrev=0)
-      - export NEW_RELEASE_VERSION="v$(echo $RELEASE_VERSION | cut -c2- | awk -F. '{$NF+=1;}1' | sed 's/ /./g')"
-      - git tag -a ${NEW_RELEASE_VERSION} -m "Release ${NEW_RELEASE_VERSION}"
-      - ./git_retry_push.sh "git push origin ${NEW_RELEASE_VERSION}"
+      - packer build -var "github_release_tag=${NEW_RELEASE_TAG}" packer.json
+post_build:
+  commands:
+    - echo "Tagging GitHub release..."
+    - export RELEASE_VERSION=$(git describe --tags --abbrev=0)
+    - export NEW_RELEASE_VERSION="v$(echo $RELEASE_VERSION | cut -c2- | awk -F. '{$NF+=1;}1' | sed 's/ /./g')"
+    - git tag -a ${NEW_RELEASE_VERSION} -m "Release ${NEW_RELEASE_VERSION}"
+    - ./git_retry_push.sh "git push origin ${NEW_RELEASE_VERSION}"
