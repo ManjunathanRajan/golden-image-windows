@@ -18,7 +18,7 @@ phases:
     commands:
       - echo "Configuring Git credentials..."
       - echo -e "Host github.com\n  Hostname github.com\n  User git\n  IdentityFile /tmp/id_rsa\n  StrictHostKeyChecking no\n" >> ~/.ssh/config
-      - echo -n $GITHUB_SSH_KEY > /tmp/id_rsa
+      - aws secretsmanager get-secret-value --secret-id GitHubSSHKey --query SecretString --output text > /tmp/id_rsa
       - chmod 600 /tmp/id_rsa
       - git remote set-url origin git@github.com:ManjunathanRajan/GI_AWS.git
       - echo "Fetching latest GitHub release tag..."
