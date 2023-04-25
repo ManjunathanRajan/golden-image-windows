@@ -11,8 +11,8 @@ phases:
       - unzip packer.zip
       - sudo mv packer /usr/local/bin/
       - echo "Installing GitHub credential managers..."
-      - curl -sL https://github.com/microsoft/Git-Credential-Manager/releases/latest/download/gcm-core-linux_amd64.deb -o gcmcore.deb
-      - sudo dpkg -i gcmcore.deb
+      - curl -sL https://github.com/microsoft/Git-Credential-Manager-Core/releases/download/v2.0.935/gcm-linux_amd64.2.0.935.tar.gz -o gcmcore.tar.gz
+      - tar -xzf gcmcore.tar.gz && sudo install gcm-core/git-credential-manager /usr/local/bin/
   pre_build:
     commands:
       - echo "Configuring Git credentials..."
@@ -21,7 +21,7 @@ phases:
       - git config --global user.email "manjun566@gmail.com"
       - git config --global user.name "ManjunathanRajan"
       - GCM_PATH=$(which git-credential-manager)
-      - echo "Git Credential Manager installed at $GCM_PATH"
+      - echo "Git Credential Manager Core installed at $GCM_PATH"
       - git config --global credential.helper "$GCM_PATH"
       - git remote set-url origin https://github.com/ManjunathanRajan/GI_AWS.git
       - echo "Fetching latest GitHub release tag..."
