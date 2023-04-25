@@ -20,6 +20,7 @@ phases:
       - git config --global credential.helper 'cache --timeout=1200'
       - git config --global user.email "manjun566@gmail.com"
       - git config --global user.name "ManjunathanRajan"
+      - git config --global credential.helper store
       - git remote set-url origin https://github.com/ManjunathanRajan/GI_AWS.git
       - echo "Fetching latest GitHub release tag..."
       - git fetch --tags
