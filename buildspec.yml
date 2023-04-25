@@ -31,7 +31,7 @@ phases:
       - export NEW_RELEASE_TAG=$(echo "v$(echo $CURRENT_RELEASE_TAG | cut -c2- | awk -F. '{$NF+=1;}1' OFS='.')")
       - echo $NEW_RELEASE_TAG
       - git tag -a ${NEW_RELEASE_TAG} -m "Release ${NEW_RELEASE_TAG}"
-      - git push ${GITHUB_REPO_URL} ${NEW_RELEASE_TAG}
+      - git push origin ${NEW_RELEASE_TAG}
       - export GITHUB_RELEASE_TAG=${NEW_RELEASE_TAG}
   build:
     commands:
