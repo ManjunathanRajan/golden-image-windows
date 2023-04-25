@@ -1,9 +1,5 @@
 version: 0.2
 
-env:
-  secrets-manager:
-    GITHUB_TOKEN: pat_gh
-
 phases:
   install:
     commands:
@@ -14,14 +10,16 @@ phases:
       - curl -o packer.zip https://releases.hashicorp.com/packer/1.7.8/packer_1.7.8_linux_amd64.zip
       - unzip packer.zip
       - sudo mv packer /usr/local/bin/
+      - echo "Installing GitHub credential managers..."
+      - curl -sL https://github.com/microsoft/Git-Credential-Manager-Core/releases/download/v2.0.498/gcmcore-linux_amd64.2.0.498.54650.deb -o gcmcore.deb
+      - sudo dpkg -i gcmcore.deb
   pre_build:
     commands:
       - echo "Configuring Git credentials..."
+      - git config --global credential.credentialStore cache
+      - git config --global credential.helper 'cache --timeout=1200'
       - git config --global user.email "manjun566@gmail.com"
       - git config --global user.name "ManjunathanRajan"
-      - git config --global credential.helper "store --file ~/.git-credentials"
-      - echo "https://github.com:${GITHUB_TOKEN}@github.com" > ~/.git-credentials
-      - chmod 0600 ~/.git-credentials
       - git remote set-url origin https://github.com/ManjunathanRajan/GI_AWS.git
       - echo "Fetching latest GitHub release tag..."
       - git fetch --tags
