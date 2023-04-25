@@ -17,12 +17,10 @@ phases:
   pre_build:
     commands:
       - echo "Configuring Git credentials..."
-      - git config --global credential.UseHttpPath true
-      - git config --global credential.helper 'cache --timeout=1200'
       - git config --global user.email "manjun566@gmail.com"
       - git config --global user.name "ManjunathanRajan"
-      - git config --global credential.https://github.com.username oauth2
-      - git config --global credential.https://github.com.password ${GITHUB_ACCESS_TOKEN}
+      - export GITHUB_REPO_URL="https://oauth2:${GITHUB_ACCESS_TOKEN}@github.com/ManjunathanRajan/GI_AWS.git"
+      - git remote set-url origin ${GITHUB_REPO_URL}
       - echo "Fetching latest GitHub release tag..."
       - git fetch --tags
       - git checkout main
@@ -43,12 +41,10 @@ phases:
   post_build:
     commands:
       - echo "Tagging GitHub release..."
-      - git config --global credential.UseHttpPath true
-      - git config --global credential.helper 'cache --timeout=1200'
       - git config --global user.email "manjun566@gmail.com"
       - git config --global user.name "ManjunathanRajan"
-      - git config --global credential.https://github.com.username oauth2
-      - git config --global credential.https://github.com.password ${GITHUB_ACCESS_TOKEN}
+      - export GITHUB_REPO_URL="https://oauth2:${GITHUB_ACCESS_TOKEN}@github.com/ManjunathanRajan/GI_AWS.git"
+      - git remote set-url origin ${GITHUB_REPO_URL}
       - export RELEASE_VERSION=$(git describe --tags --abbrev=0)
       - export NEW_RELEASE_VERSION="v$(echo $RELEASE_VERSION | cut -c2- | awk -F. '{$NF+=1;}1' | sed 's/ /./g')"
       - git tag -a ${NEW_RELEASE_VERSION} -m "Release ${NEW_RELEASE_VERSION}"
