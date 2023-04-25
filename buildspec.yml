@@ -21,11 +21,11 @@ phases:
       - git config --global user.name "ManjunathanRajan"
       - echo "Fetching latest GitHub release tag..."
       - git fetch --tags
-	    - git checkout main
-	    - git pull origin main
-	    - git checkout --orphan temp_branch
-	    - git commit --allow-empty -m "Creating common ancestor commit"
-	    - git checkout main
+      - git checkout main
+      - git pull origin main
+      - git checkout --orphan temp_branch
+      - git commit --allow-empty -m "Creating common ancestor commit"
+      - git checkout main
       - git merge temp_branch --no-ff -m "Merge temp_branch to create common ancestor"
       - git branch -D temp_branch
       - git pull origin OS-Release
