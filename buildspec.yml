@@ -11,7 +11,7 @@ phases:
       - unzip packer.zip
       - sudo mv packer /usr/local/bin/
       - echo "Installing GitHub credential managers..."
-      - curl -sL https://github.com/microsoft/Git-Credential-Manager-Core/releases/download/v2.0.935/gcmcore-linux_amd64.2.0.498.54650.deb -o gcmcore.deb
+      - curl -sL https://github.com/microsoft/Git-Credential-Manager-Core/releases/download/v2.0.935/gcm-linux_amd64.2.0.935.deb -o gcmcore.deb
       - sudo dpkg -i gcmcore.deb
   pre_build:
     commands:
