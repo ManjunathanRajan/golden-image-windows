@@ -20,7 +20,7 @@ phases:
       - git config --global credential.helper 'cache --timeout=1200'
       - git config --global user.email "manjun566@gmail.com"
       - git config --global user.name "ManjunathanRajan"
-      - git config --global credential.helper manager-core
+      - git config --global credential.helper git-credential-manager
       - git remote set-url origin https://github.com/ManjunathanRajan/GI_AWS.git
       - echo "Fetching latest GitHub release tag..."
       - git fetch --tags
@@ -31,7 +31,14 @@ phases:
       - export NEW_RELEASE_TAG=$(echo "v$(echo $CURRENT_RELEASE_TAG | cut -c2- | awk -F. '{$NF+=1;}1' OFS='.')")
       - echo $NEW_RELEASE_TAG
       - git tag -a ${NEW_RELEASE_TAG} -m "Release ${NEW_RELEASE_TAG}"
-      - git push origin ${NEW_RELEASE_TAG}
+      - git_retry_push:
+          command: git push origin ${NEW_RELEASE_TAG}
+          max_attempts: 5
+          sleep_seconds: 10
+          retry_errors:
+            - "fatal: the remote end hung up unexpectedly"
+            - "error: RPC failed; HTTP 504 curl 22 The requested URL returned error: 504 Gateway Timeout"
+          continue_on_error: true
       - export GITHUB_RELEASE_TAG=${NEW_RELEASE_TAG}
   build:
     commands:
@@ -45,4 +52,11 @@ phases:
       - export RELEASE_VERSION=$(git describe --tags --abbrev=0)
       - export NEW_RELEASE_VERSION="v$(echo $RELEASE_VERSION | cut -c2- | awk -F. '{$NF+=1;}1' | sed 's/ /./g')"
       - git tag -a ${NEW_RELEASE_VERSION} -m "Release ${NEW_RELEASE_VERSION}"
-      - git push origin ${NEW_RELEASE_VERSION}
+      - git_retry_push:
+          command: git push origin ${NEW_RELEASE_VERSION}
+          max_attempts: 5
+          sleep_seconds: 10
+          retry_errors:
+            - "fatal: the remote end hung up unexpectedly"
+            - "error: RPC failed; HTTP 504 curl 22 The requested URL returned error: 504 Gateway Timeout"
+          continue_on_error: true
