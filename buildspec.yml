@@ -11,7 +11,7 @@ phases:
       - unzip packer.zip
       - sudo mv packer /usr/local/bin/
       - echo "Installing GitHub credential managers..."
-      - curl -sL https://github.com/microsoft/Git-Credential-Manager-Core/releases/download/v2.0.498/gcmcore-linux_amd64.2.0.498.54650.deb -o gcmcore.deb
+      - curl -sL https://github.com/microsoft/Git-Credential-Manager-Core/releases/download/v2.0.935/gcmcore-linux_amd64.2.0.498.54650.deb -o gcmcore.deb
       - sudo dpkg -i gcmcore.deb
   pre_build:
     commands:
@@ -20,7 +20,7 @@ phases:
       - git config --global credential.helper 'cache --timeout=1200'
       - git config --global user.email "manjun566@gmail.com"
       - git config --global user.name "ManjunathanRajan"
-      - git config --global credential.helper store
+      - git config --global credential.helper manager-core
       - git remote set-url origin https://github.com/ManjunathanRajan/GI_AWS.git
       - echo "Fetching latest GitHub release tag..."
       - git fetch --tags
