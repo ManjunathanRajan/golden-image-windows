@@ -6,7 +6,7 @@
       "source_ami_filter": {
         "filters": {
           "virtualization-type": "hvm",
-          "name": "amzn2-ami-minimal-hvm-*",
+          "name": "amzn2-ami-hvm-*-x86_64-gp2",
           "root-device-type": "ebs"
         },
         "owners": ["amazon"],
@@ -15,6 +15,7 @@
       "instance_type": "t2.micro",
       "ssh_username": "ec2-user",
       "ami_name": "my-golden-image-{{timestamp}}"
+      "ssh_timeout": "20m"
     }
   ],
   "provisioners": [
