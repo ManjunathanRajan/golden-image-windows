@@ -26,9 +26,9 @@ phases:
       - git checkout --orphan temp_branch
       - git commit --allow-empty -m "Creating common ancestor commit"
       - git checkout main
-      - git merge temp_branch --no-ff -m "Merge temp_branch to create common ancestor"
+      - git merge temp_branch --allow-unrelated-histories -m "Merge temp_branch to create common ancestor"
       - git checkout OS-Release
-      - git merge temp_branch --no-ff -m "Merge temp_branch to create common ancestor"
+      - git merge temp_branch --allow-unrelated-histories -m "Merge temp_branch to create common ancestor"
       - git branch -D temp_branch
       - git pull origin OS-Release
       - export CURRENT_RELEASE_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
