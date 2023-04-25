@@ -23,16 +23,15 @@ phases:
       - git config --global credential.helper cache
       - echo "machine github.com login manjun566@gmail.com password ${GITHUB_PAT}" > ~/.netrc
       - git remote set-url origin https://manjun566:${GITHUB_PAT}@github.com/ManjunathanRajan/GI_AWS.git
-      - echo "Fetching latest GitHub release tag..."
-      - git fetch --tags
       - git checkout main
+      - git config pull.rebase true
       - git pull origin main
   build:
     commands:
       - echo "Validating Packer template..."
       - packer validate packer.json
       - echo "Building golden image..."
-      - packer build -var "github_pat=${GITHUB_PAT}" packer.json
+      - packer build packer.json
   post_build:
     commands:
       - echo "Post-build actions..."

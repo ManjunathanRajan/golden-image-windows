@@ -1,7 +1,4 @@
 {
-  "variables": {
-    "github_release_tag": ""
-  },
   "builders": [
     {
       "type": "amazon-ebs",
@@ -49,14 +46,11 @@
       ]
     }
   ],
-    "post-processors": [
+  "post-processors": [
     {
       "type": "manifest",
       "output": "manifest.json",
-      "strip_path": true,
-      "custom_tags": {
-        "Release": "{{ user `github_release_tag` }}"
-      }
+      "strip_path": true
     }
   ]
 }
