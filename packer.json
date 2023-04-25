@@ -26,36 +26,14 @@
   ],
   "provisioners": [
     {
-      "type": "amazon-ssm",
-      "region": "{{user `aws_region`}}",
-      "access_key": "{{user `aws_access_key`}}",
-      "secret_key": "{{user `aws_secret_key`}}",
-      "command": [
-        "sudo yum update -y",
-        "sudo yum install -y amazon-ssm-agent",
-        "sudo systemctl enable amazon-ssm-agent",
-        "sudo systemctl start amazon-ssm-agent",
-        "sudo yum install -y git zip unzip",
-        "echo 'Installing AWS CLI...'",
-        "curl 'https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip' -o 'awscliv2.zip'",
-        "unzip awscliv2.zip",
-        "sudo ./aws/install",
-        "echo 'Installing Docker...'",
-        "sudo amazon-linux-extras install docker -y",
-        "sudo systemctl enable docker",
-        "sudo systemctl start docker",
-        "sudo usermod -aG docker ec2-user",
-        "echo 'Installing Node.js and npm...'",
-        "curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -",
-        "sudo yum install -y nodejs",
-        "sudo mkdir /var/www/my-app",
-        "sudo chown ec2-user /var/www/my-app",
-        "cd /var/www/my-app",
-        "cd my-app",
-        "npm install",
-        "echo '<h1>Hello World</h1>' > index.html",
-        "npm start"
-      ]
+      "type": "shell",
+      "inline": [
+        "INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)",
+        "REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/[a-z]$//')",
+        "aws configure set region ${REGION}",
+        "aws ssm send-command --instance-ids ${INSTANCE_ID} --document-name 'AWS-RunShellScript' --parameters commands=['sudo yum update -y', 'sudo yum install -y amazon-ssm-agent', 'sudo systemctl enable amazon-ssm-agent', 'sudo systemctl start amazon-ssm-agent', 'sudo yum install -y git zip unzip', 'echo Installing AWS CLI...', 'curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip', 'unzip awscliv2.zip', 'sudo ./aws/install', 'echo Installing Docker...', 'sudo amazon-linux-extras install docker -y', 'sudo systemctl enable docker', 'sudo systemctl start docker', 'sudo usermod -aG docker ec2-user', 'echo Installing Node.js and npm...', 'curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -', 'sudo yum install -y nodejs', 'sudo mkdir /var/www/my-app', 'sudo chown ec2-user /var/www/my-app', 'cd /var/www/my-app', 'cd my-app', 'npm install', 'echo \'<h1>Hello World</h1>\' > index.html', 'npm start'] --query 'Command.CommandId' --output text"
+      ],
+      "pause_before": "10s"
     }
   ],
   "post-processors": [
