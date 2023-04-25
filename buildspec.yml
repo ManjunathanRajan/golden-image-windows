@@ -34,7 +34,7 @@ phases:
       - echo $CURRENT_RELEASE_TAG
       - git checkout main
       - git pull origin main
-      - git merge OS-Release --no-ff -m "Merge OS-Release"
+      - git merge OS-Release --allow-unrelated-histories --no-ff -m "Merge OS-Release"
       - export NEW_RELEASE_TAG=$(echo "v$(echo $CURRENT_RELEASE_TAG | cut -c2- | awk -F. '{$NF+=1;}1' OFS='.')")
       - echo $NEW_RELEASE_TAG
       - git tag -a ${NEW_RELEASE_TAG} -m "Release ${NEW_RELEASE_TAG}"
