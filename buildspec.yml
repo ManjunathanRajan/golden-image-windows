@@ -13,7 +13,8 @@ phases:
       - echo "Installing GitHub credential managers..."
       - curl -sL https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.0.935/gcm-linux_amd64.2.0.935.tar.gz -o gcmcore.tar.gz
       - mkdir gcm-core
-      - tar -xzf gcmcore.tar.gz -C gcm-core && sudo install gcm-core/*/git-credential-manager /usr/local/bin/
+      - tar -xzf gcmcore.tar.gz -C gcm-core
+      - sudo install gcm-core/git-credential-manager /usr/local/bin/
   pre_build:
     commands:
       - echo "Configuring Git credentials..."
