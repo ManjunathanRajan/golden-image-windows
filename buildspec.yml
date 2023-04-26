@@ -1,38 +1,22 @@
 version: 0.2
+
 env:
-  secrets-manager:
-    GITHUB_PAT: pat_gh:PAT
+  variables:
+    ECR_REPOSITORY_URI: "716514200744.dkr.ecr.us-west-2.amazonaws.com/my-ecr-repo"
+
 phases:
-  install:
-    commands:
-      - echo "Installing git..."
-      - yum update -y
-      - yum install -y git
-      - echo "Installing Packer..."
-      - curl -o packer.zip https://releases.hashicorp.com/packer/1.7.8/packer_1.7.8_linux_amd64.zip
-      - unzip packer.zip
-      - sudo mv packer /usr/local/bin/
-      - echo "Installing AWS CLI..."
-      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-      - unzip awscliv2.zip
-      - sudo ./aws/install
   pre_build:
     commands:
-      - echo "Configuring Git credentials..."
-      - git config --global user.email "manjun566@gmail.com"
-      - git config --global credential.helper cache
-      - echo "machine github.com login manjun566@gmail.com password ${GITHUB_PAT}" > ~/.netrc
-      - git remote set-url origin https://manjun566:${GITHUB_PAT}@github.com/ManjunathanRajan/GI_AWS.git
-      - git checkout main
-      - git config pull.rebase true
-      - git pull origin main
+      - echo "Building Docker image with Packer and AWS CLI"
+      - docker build -t packer-aws .
   build:
     commands:
-      - echo "Validating Packer template..."
-      - packer validate packer.json
-      - echo "Building golden image..."
+      - echo "Logging in to Amazon ECR"
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
+      - docker tag packer-aws:latest $ECR_REPOSITORY_URI:packer-aws
+      - echo "Building AMI using Packer"
       - packer build packer.json
   post_build:
     commands:
-      - echo "Post-build actions..."
-      - echo "Golden image build complete."
+      - echo "Pushing Docker image to ECR"
+      - docker push $ECR_REPOSITORY_URI:packer-aws
