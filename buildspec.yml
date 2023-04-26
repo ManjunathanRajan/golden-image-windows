@@ -20,3 +20,7 @@ phases:
     commands:
       - echo "Pushing Docker image to ECR"
       - docker push $ECR_REPOSITORY_URI:packer-aws
+
+artifacts:
+  files:
+    - manifest.json
