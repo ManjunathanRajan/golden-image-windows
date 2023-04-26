@@ -26,16 +26,25 @@
     }
   ],
   "provisioners": [
-    {
-      "type": "powershell",
-      "inline": [
-        "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force",
-        "Set-Item WSMan:\\localhost\\Service\\AllowUnencrypted -Value True",
-        "Install-WindowsFeature -Name Web-Server",
-        "Invoke-WebRequest -Uri https://awscli.amazonaws.com/awscli-exe-windows-x86_64.zip -OutFile awscliv2.zip",
-        "Expand-Archive -Path awscliv2.zip -DestinationPath $env:ProgramFiles",
-        "C:\\Program Files\\awscli\\bin\\aws.exe s3 cp s3://my-bucket/my-file.txt C:\\inetpub\\wwwroot\\my-file.txt"
-      ],
+  {
+    "type": "powershell",
+    "inline": [
+      "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force",
+      "Set-Item WSMan:\\localhost\\Service\\AllowUnencrypted -Value True",
+      "Install-WindowsFeature -Name Web-Server",
+      "Invoke-WebRequest -Uri https://awscli.amazonaws.com/awscli-exe-windows-x86_64.zip -OutFile awscliv2.zip",
+      "Expand-Archive -Path awscliv2.zip -DestinationPath $env:ProgramFiles",
+      "C:\\Program Files\\awscli\\bin\\aws.exe s3 cp s3://my-bucket-ami-testing/my-file.txt C:\\inetpub\\wwwroot\\my-file.txt",
+
+      "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))",
+      "choco feature enable -n allowGlobalConfirmation",
+      "choco install docker-desktop",
+      "choco install 7zip",
+      "choco install googlechrome",
+      "choco install git",
+      "choco install github-desktop",
+      "choco install git.install --params '\"/GitAndUnixToolsOnPath\"'"
+    ],
       "pause_before": "10s"
     },
     {
