@@ -3,6 +3,9 @@ version: 0.2
 env:
   variables:
     ECR_REPOSITORY_URI: "716514200744.dkr.ecr.us-west-2.amazonaws.com/my-ecr-repo"
+  secrets-manager:
+    AWS_ACCESS_KEY_ID: aws_secrets:AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: aws_secrets:AWS_SECRET_ACCESS_KEY
 
 phases:
   pre_build:
@@ -12,7 +15,8 @@ phases:
   build:
     commands:
       - echo "Logging in to Amazon ECR"
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
+      - LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $AWS_REGION)
+      - eval $LOGIN_COMMAND
       - docker tag packer-aws:latest $ECR_REPOSITORY_URI:packer-aws
       - echo "Building AMI using Packer"
       - packer build packer.json
