@@ -15,6 +15,8 @@ phases:
   build:
     commands:
       - echo "Logging in to Amazon ECR"
+      - export AWS_ACCESS_KEY_ID
+      - export AWS_SECRET_ACCESS_KEY
       - LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $AWS_REGION)
       - eval $LOGIN_COMMAND
       - docker tag packer-aws:latest $ECR_REPOSITORY_URI:packer-aws
