@@ -9,7 +9,9 @@ phases:
       - curl -o packer.zip https://releases.hashicorp.com/packer/1.7.8/packer_1.7.8_windows_amd64.zip
       - unzip packer.zip
       - rm -f packer.zip
+      - New-Item -ItemType Directory -Path .\bin
+      - Move-Item -Path .\packer.exe -Destination .\bin\packer.exe
   build:
     commands:
       - echo "Building Windows AMI with Packer..."
-      - ./packer build packer-windows-ami.json
+      - .\bin\packer.exe build packer-windows-ami.json
