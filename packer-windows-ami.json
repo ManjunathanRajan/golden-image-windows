@@ -8,7 +8,7 @@
       "name": "firstrun-windows",
       "ami_name": "packer-windows-demo-{{timestamp}}",
       "communicator": "winrm",
-      "instance_type": "t2.micro",
+      "instance_type": "m5a.xlarge",
       "region": "{{user `region`}}",
       "source_ami_filter": {
         "filters": {
