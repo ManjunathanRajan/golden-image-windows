@@ -14,7 +14,7 @@
       },
       "instance_type": "m5a.xlarge",
       "ami_name": "windows-docker-ami-{{timestamp}}",
-      "user_data_file": "./bootstrap_win.txt",
+      "user_data_file": "./bootstrap_win.ps1",
       "communicator": "winrm",
       "winrm_username": "Administrator",
       "winrm_use_ssl": true,
