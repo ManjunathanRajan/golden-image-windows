@@ -12,7 +12,7 @@
       "region": "{{user `region`}}",
       "source_ami_filter": {
         "filters": {
-          "name": "Windows_Server-2012-R2*English-64Bit-Base*",
+          "name": "Windows_Server-2019-English-Full-Base-*",
           "root-device-type": "ebs",
           "virtualization-type": "hvm"
         },
@@ -42,6 +42,7 @@
     },
     {
       "type": "powershell",
+      "pause_before": "3m",
       "environment_vars": [
         "VAR1=A$Dollar",
         "VAR2=A`Backtick",
