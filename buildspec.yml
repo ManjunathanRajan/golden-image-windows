@@ -1,30 +1,15 @@
 version: 0.2
 
-env:
-  variables:
-    AWS_REGION: "us-west-2"
-
-secrets-manager:
-  AWS_ACCESS_KEY_ID: aws_secrets:KEY_ID
-  AWS_SECRET_ACCESS_KEY: aws_secrets:ACCESS_KEY
-
 phases:
-  pre_build:
+  install:
+    runtime-versions:
+      docker: 19
     commands:
-      - echo "Building Docker image with Packer and AWS CLI"
+      - echo "Installing Packer..."
+      - curl -o packer.zip https://releases.hashicorp.com/packer/1.7.8/packer_1.7.8_windows_amd64.zip
+      - unzip packer.zip
+      - rm -f packer.zip
   build:
     commands:
-      - echo "Logging in to Amazon ECR"
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 716514200744.dkr.ecr.us-west-2.amazonaws.com
-      - docker build -t packer-aws .
-      - docker tag packer-aws:latest 716514200744.dkr.ecr.us-west-2.amazonaws.com/packer-aws:latest
-      - echo "Building AMI using Packer"
-      - packer build packer.json
-  post_build:
-    commands:
-      - echo "Pushing Docker image to ECR"
-      - docker push 716514200744.dkr.ecr.us-west-2.amazonaws.com/packer-aws:latest
-
-artifacts:
-  files:
-    - manifest.json
+      - echo "Building Windows AMI with Packer..."
+      - .\packer.exe build packer-windows-ami.json

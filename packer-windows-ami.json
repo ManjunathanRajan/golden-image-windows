@@ -1,0 +1,31 @@
+{
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "us-west-2",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "Windows_Server-2019-English-Full-Base-*",
+          "root-device-type": "ebs"
+        },
+        "owners": ["amazon"],
+        "most_recent": true
+      },
+      "instance_type": "m5a.xlarge",
+      "ami_name": "windows-docker-ami-{{timestamp}}",
+      "user_data_file": "./bootstrap_win.txt",
+      "communicator": "winrm",
+      "winrm_username": "Administrator",
+      "winrm_use_ssl": true,
+      "winrm_insecure": true,
+      "force_deregister": true
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "script": "./install_docker.ps1"
+    }
+  ]
+}
