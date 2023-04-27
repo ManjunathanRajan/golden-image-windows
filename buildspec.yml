@@ -2,16 +2,14 @@ version: 0.2
 
 phases:
   install:
-    runtime-versions:
-      docker: 20
     commands:
       - echo "Installing Packer..."
-      - curl -o packer.zip https://releases.hashicorp.com/packer/1.7.8/packer_1.7.8_windows_amd64.zip
+      - curl -o packer.zip https://releases.hashicorp.com/packer/1.7.8/packer_1.7.8_linux_amd64.zip
       - unzip packer.zip
       - rm -f packer.zip
-      - New-Item -ItemType Directory -Path .\bin
-      - Move-Item -Path .\packer.exe -Destination .\bin\packer.exe
+      - chmod +x packer
+      - sudo mv packer /usr/local/bin
   build:
     commands:
       - echo "Building Windows AMI with Packer..."
-      - .\bin\packer.exe build packer-windows-ami.json
+      - packer build packer-windows-ami.json
