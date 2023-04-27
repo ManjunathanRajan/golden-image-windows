@@ -9,10 +9,10 @@ phases:
       - rm -f packer.zip
       - chmod +x packer
       - sudo mv packer /usr/local/bin
-
   build:
     commands:
       - echo "Building Windows Packer AMI..."
+      - packer validate packer-windows-ami.json
       - packer build packer-windows-ami.json
 artifacts:
   files:
