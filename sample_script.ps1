@@ -25,22 +25,19 @@ choco install git -y
 # Install 7-Zip
 choco install 7zip -y
 
-# Install Docker
-choco install docker-desktop -y
-
-# Install Google Chrome
-choco install googlechrome -y
-
-# Install Apache OpenOffice
-choco install openoffice -y
-
 # Install FileZilla
 choco install filezilla -y
 
-# Install Visual Studio (Community Edition)
-choco install visualstudio2019community -y
-
 # Install AWS CLI
 choco install awscli -y
+
+# Install IIS
+Install-WindowsFeature Web-Server
+
+# Install Filebeat
+choco install filebeat -y
+
+# Install Winlogbeat
+choco install winlogbeat -y
 
 Write-Host "Installation completed."
