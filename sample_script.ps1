@@ -11,3 +11,36 @@ Write-Host "Likewise, VAR2 is:" $Env:VAR2
 Write-Host "VAR3 is:" $Env:VAR3
 Write-Host "Finally, VAR4 is:" $Env:VAR4
 Write-Host "None of the special characters needed escaping in the template"
+
+Write-Host "Installing required software..."
+
+# Install Chocolatey package manager
+Set-ExecutionPolicy Bypass -Scope Process -Force
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+# Install Git
+choco install git -y
+
+# Install 7-Zip
+choco install 7zip -y
+
+# Install Docker
+choco install docker-desktop -y
+
+# Install Google Chrome
+choco install googlechrome -y
+
+# Install Apache OpenOffice
+choco install openoffice -y
+
+# Install FileZilla
+choco install filezilla -y
+
+# Install Visual Studio (Community Edition)
+choco install visualstudio2019community -y
+
+# Install AWS CLI
+choco install awscli -y
+
+Write-Host "Installation completed."
