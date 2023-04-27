@@ -54,11 +54,12 @@
   ],
   "post-processors": [
     {
-      "type": "amazon-ebssurrogate",
+      "type": "amazon-import",
       "region": "{{user `region`}}",
-      "skip_amis": true,
-      "skip_instance_removal": true,
-      "skip_snapshot_removal": false
+      "ami_regions": ["{{user `region`}}"],
+      "ami_name": "packer-windows-demo-{{timestamp}}",
+      "delete_snapshot": true,
+      "snapshot_regions": ["{{user `region`}}"]
     }
   ]
 }
