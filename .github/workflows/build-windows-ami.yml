@@ -29,7 +29,7 @@ jobs:
       run: sudo apt-get install jq
 
     - name: Set up Packer
-      uses: hashicorp/setup-packer@v1.0.1
+      uses: hashicorp/setup-packer@v2.0.0
       id: setup
       with:
         version: ${{ env.PRODUCT_VERSION }}
