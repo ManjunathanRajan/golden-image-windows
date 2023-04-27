@@ -41,8 +41,13 @@ jobs:
         role-session-name: GitHub-Action-Role
         aws-region: ${{ env.AWS_REGION }}
 
+    - name: Create packer-chroot directory and set permissions
+      run: |
+        sudo mkdir -p /var/lock/packer-chroot
+        sudo chown -R $(whoami):$(whoami) /var/lock/packer-chroot
+
     - name: Validate Packer configuration
       run: packer validate packer-linux-ami.json
 
     - name: Build Linux AMI
-      run: sudo packer build packer-linux-ami.json
+      run: packer build packer-linux-ami.json
