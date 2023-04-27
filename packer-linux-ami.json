@@ -1,0 +1,40 @@
+{
+  "builders": [
+    {
+      "type": "amazon-chroot",
+      "region": "us-west-2",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "amzn2-ami-hvm-*-x86_64-gp2",
+          "root-device-type": "ebs"
+        },
+        "owners": ["amazon"],
+        "most_recent": true
+      },
+      "ami_name": "linux-docker-ami-{{timestamp}}",
+      "mount_options": "bind",
+      "mount_path": "/mnt/packer-amazon-chroot",
+      "chroot_mounts": [
+        ["proc", "proc", "/mnt/packer-amazon-chroot/proc"],
+        ["sysfs", "sysfs", "/mnt/packer-amazon-chroot/sys"],
+        ["bind", "/dev", "/mnt/packer-amazon-chroot/dev"],
+        ["bind", "/dev/pts", "/mnt/packer-amazon-chroot/dev/pts"],
+        ["bind", "/proc/sys/fs/binfmt_misc", "/mnt/packer-amazon-chroot/proc/sys/fs/binfmt_misc"]
+      ],
+      "command_wrapper": "{{.Command}}",
+      "copy_files": [
+        "/etc/resolv.conf"
+      ],
+      "device_path": "/dev/sdb",
+      "root_volume_size": 20,
+      "force_deregister": true
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "./install_docker.sh"
+    }
+  ]
+}

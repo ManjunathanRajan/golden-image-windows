@@ -1,4 +1,4 @@
-name: Build Windows AMI with Packer
+name: Build Lnux AMI with Packer
 
 on:
   workflow_dispatch: {}
@@ -42,7 +42,7 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Validate Packer configuration
-      run: packer validate packer-windows-ami.json
+      run: packer validate packer-linux-ami.json
 
     - name: Build Windows AMI
-      run: packer build packer-windows-ami.json
+      run: packer build packer-linux-ami.json
