@@ -22,8 +22,8 @@
       "winrm_timeout": "10m",
       "winrm_port": 5985,
       "force_deregister": true,
-      "vpc_id": "vpc-123456789012",
-      "security_group_id": "sg-123456678901",
+      "vpc_id": "vpc-0c93beebd1f772a5b",
+      "security_group_id": "sg-0941b84781e14f3ec",
       "aws_polling": {
         "delay_seconds": 15,
         "max_attempts": 60
