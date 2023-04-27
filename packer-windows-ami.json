@@ -51,5 +51,14 @@
       ],
       "script": "./sample_script.ps1"
     }
+  ],
+  "post-processors": [
+    {
+      "type": "amazon-ebssurrogate",
+      "region": "{{user `region`}}",
+      "skip_amis": true,
+      "skip_instance_removal": true,
+      "skip_snapshot_removal": false
+    }
   ]
 }
