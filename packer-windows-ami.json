@@ -20,6 +20,8 @@
       "winrm_use_ssl": true,
       "winrm_insecure": true,
       "force_deregister": true,
+      "vpc_id": "vpc-0c93beebd1f772a5b",
+      "security_group_id": "sg-0941b84781e14f3ec",
       "aws_polling": {
         "delay_seconds": 15,
         "max_attempts": 60
