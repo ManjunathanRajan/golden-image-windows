@@ -12,4 +12,4 @@ phases:
   build:
     commands:
       - echo "Building Windows AMI with Packer..."
-      - .\packer.exe build packer-windows-ami.json
+      - ./packer build packer-windows-ami.json
