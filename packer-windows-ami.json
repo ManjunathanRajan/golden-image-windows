@@ -51,15 +51,5 @@
       ],
       "script": "./sample_script.ps1"
     }
-  ],
-  "post-processors": [
-    {
-      "type": "amazon-import",
-      "region": "{{user `region`}}",
-      "ami_regions": ["{{user `region`}}"],
-      "ami_name": "packer-windows-demo-{{timestamp}}",
-      "delete_snapshot": true,
-      "snapshot_regions": ["{{user `region`}}"]
-    }
   ]
 }
