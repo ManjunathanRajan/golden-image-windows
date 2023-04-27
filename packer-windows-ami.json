@@ -19,7 +19,11 @@
       "winrm_username": "Administrator",
       "winrm_use_ssl": true,
       "winrm_insecure": true,
-      "force_deregister": true
+      "force_deregister": true,
+      "aws_polling": {
+        "delay_seconds": 15,
+        "max_attempts": 60
+      }
     }
   ],
   "provisioners": [
