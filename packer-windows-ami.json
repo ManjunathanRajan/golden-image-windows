@@ -21,8 +21,7 @@
       },
       "user_data_file": "./bootstrap_win.txt",
       "winrm_password": "SuperS3cr3t!!!!",
-      "winrm_username": "Administrator",
-      "delete_snapshot": true
+      "winrm_username": "Administrator"
     }
   ],
   "provisioners": [
@@ -51,6 +50,15 @@
         "VAR4=A\"DoubleQuote"
       ],
       "script": "./sample_script.ps1"
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "amazon-ebssurrogate",
+      "region": "{{user `region`}}",
+      "skip_amis": true,
+      "skip_instance_removal": true,
+      "skip_snapshot_removal": false
     }
   ]
 }
