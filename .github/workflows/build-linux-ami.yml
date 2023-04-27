@@ -41,10 +41,11 @@ jobs:
         role-session-name: GitHub-Action-Role
         aws-region: ${{ env.AWS_REGION }}
 
-    - name: Create packer-chroot(/mnt/packer) directory and set permissions
+    - name: Ensure packer-amazon-chroot directory exists
       run: |
         sudo mkdir -p /mnt/packer-amazon-chroot
         sudo chown -R $(whoami):$(whoami) /mnt/packer-amazon-chroot
+        ls -ld /mnt/packer-amazon-chroot
 
     - name: Create packer-chroot(/var/lock/) directory and set permissions
       run: |
