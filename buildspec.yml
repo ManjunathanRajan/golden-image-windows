@@ -10,14 +10,10 @@ phases:
       - chmod +x packer
       - sudo mv packer /usr/local/bin
 
-  pre_build:
-    commands:
-      - echo "Making mount_chroot.sh executable..."
-      - chmod +x mount_chroot.sh
   build:
     commands:
-      - echo "Building Packer AMI..."
-      - packer build packer-linux-ami.json
+      - echo "Building Windows Packer AMI..."
+      - packer build packer-windows-ami.json
 artifacts:
   files:
     - '**/*'
