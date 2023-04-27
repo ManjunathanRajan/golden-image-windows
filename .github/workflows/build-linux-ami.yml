@@ -8,7 +8,7 @@ env:
   PRODUCT_VERSION: "1.8.6"
 
 jobs:
-  build-windows-ami:
+  build-linux-ami:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
