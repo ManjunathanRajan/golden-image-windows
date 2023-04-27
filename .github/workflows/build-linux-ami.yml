@@ -26,7 +26,7 @@ jobs:
         unzip awscliv2.zip
         sudo ./aws/install --update
     - name: Install jq
-      run: sudo apt-get install jq
+      run: sudo yum install -y jq
 
     - name: Set up Packer
       uses: hashicorp/setup-packer@v2.0.0
