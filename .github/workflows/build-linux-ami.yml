@@ -43,6 +43,11 @@ jobs:
 
     - name: Create packer-chroot directory and set permissions
       run: |
+        sudo mkdir -p /mnt/packer-amazon-chroot
+        sudo chown -R $(whoami):$(whoami) /mnt/packer-amazon-chroot
+
+    - name: Create packer-chroot directory and set permissions
+      run: |
         sudo mkdir -p /var/lock/packer-chroot
         sudo chown -R $(whoami):$(whoami) /var/lock/packer-chroot
 
