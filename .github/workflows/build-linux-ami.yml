@@ -9,7 +9,7 @@ env:
 
 jobs:
   build-linux-ami:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       id-token: write
       contents: read
@@ -44,5 +44,5 @@ jobs:
     - name: Validate Packer configuration
       run: packer validate packer-linux-ami.json
 
-    - name: Build Windows AMI
+    - name: Build Linux AMI
       run: packer build packer-linux-ami.json
