@@ -43,9 +43,9 @@ jobs:
 
     - name: Ensure packer-amazon-chroot directory exists
       run: |
-        sudo mkdir -p /mnt/packer-amazon-chroot
-        sudo chown -R $(whoami):$(whoami) /mnt/packer-amazon-chroot
-        ls -ld /mnt/packer-amazon-chroot
+        sudo mkdir -p /home/ec2-user/packer-amazon-chroot
+        sudo chown -R $(whoami):$(whoami) /home/ec2-user/packer-amazon-chroot
+        ls -ld /home/ec2-user/packer-amazon-chroot
 
     - name: Create packer-chroot(/var/lock/) directory and set permissions
       run: |
