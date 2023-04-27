@@ -22,7 +22,7 @@
         ["bind", "/dev/pts", "/mnt/packer-amazon-chroot/dev/pts"],
         ["bind", "/proc/sys/fs/binfmt_misc", "/mnt/packer-amazon-chroot/proc/sys/fs/binfmt_misc"]
       ],
-      "command_wrapper": "{{.Command}}",
+      "command_wrapper": "sudo {{.Command}}",
       "copy_files": [
         "/etc/resolv.conf"
       ],
