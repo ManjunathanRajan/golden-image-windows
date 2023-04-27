@@ -1,4 +1,4 @@
-name: Build Lnux AMI with Packer
+name: Build Linux AMI with Packer
 
 on:
   workflow_dispatch: {}
