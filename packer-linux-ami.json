@@ -22,7 +22,8 @@
       "ssh_username": "ec2-user",
       "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
       "ssh_timeout": "10m",
-      "associate_public_ip_address": true,
+      "ssh_private_ip": true,
+      "security_group_id": "sg-0a44bdc8a5fa25345",
       "ami_name": "packer-linux-demo-{{timestamp}}",
       "ami_description": "Packer build using latest ECR Docker image",
       "launch_block_device_mappings": [
@@ -35,10 +36,7 @@
       ],
       "tags": {
         "Name": "packer-awsal2023"
-      },
-      "temporary_security_group_source_cidrs": [
-        "0.0.0.0/0"
-      ]
+      }
     }
   ],
   "provisioners": [
