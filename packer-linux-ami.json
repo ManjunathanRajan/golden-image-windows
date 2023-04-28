@@ -2,13 +2,13 @@
   "variables": {
     "aws_region": "us-west-2",
     "docker_image": "716514200744.dkr.ecr.us-west-2.amazonaws.com/packer-awsal2023:latest",
-    "ssh_password": "SuperS3cr3t!!!!"
+    "ssh_password": "SuperS3cr3t!!!!",
+    "ami_name": "packer-linux-demo-{{timestamp}}"
   },
   "builders": [
     {
       "type": "amazon-ebs",
       "name": "firstrun-linux",
-      "ami_name": "packer-linux-demo-{{timestamp}}",
       "region": "{{user `aws_region`}}",
       "source_ami_filter": {
         "filters": {
