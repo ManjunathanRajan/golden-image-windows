@@ -1,31 +1,53 @@
 {
   "variables": {
-    "docker_image": "716514200744.dkr.ecr.us-west-2.amazonaws.com/packer-awsal2023:latest"
+    "aws_region": "us-west-2",
+    "docker_image": "716514200744.dkr.ecr.us-west-2.amazonaws.com/packer-awsal2023:latest",
+    "ssh_password": "SuperS3cr3t!!!!"
   },
   "builders": [
     {
-      "type": "docker",
-      "image": "{{ user `docker_image` }}",
-      "commit": true
+      "type": "amazon-ebs",
+      "region": "{{user `aws_region`}}",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "amzn2-ami-hvm-2.0.2021*-x86_64-gp2",
+          "root-device-type": "ebs"
+        },
+        "owners": ["amazon"],
+        "most_recent": true
+      },
+      "instance_type": "t2.micro",
+      "ssh_username": "ec2-user",
+      "ssh_password": "{{user `ssh_password`}}",
+      "ssh_agent_auth": false,
+      "ami_name": "packer-awsal2023-{{timestamp}}",
+      "ami_description": "Packer build using latest ECR Docker image",
+      "launch_block_device_mappings": [
+        {
+          "device_name": "/dev/xvda",
+          "volume_size": 30,
+          "volume_type": "gp2",
+          "delete_on_termination": true
+        }
+      ],
+      "tags": {
+        "Name": "packer-awsal2023"
+      },
+      "user_data_file": "enable_password_ssh.sh"
     }
   ],
   "provisioners": [
     {
       "type": "shell",
       "inline": [
-        "docker import {{.BuildName}}-{{.BuilderType}}.tar",
-        "docker run -d --name temp_container {{ user `docker_image` }}",
-        "docker cp temp_container:/ /mnt/docker_root",
-        "docker rm -f temp_container"
+        "sudo yum update -y",
+        "sudo yum install -y docker",
+        "sudo systemctl start docker",
+        "sudo systemctl enable docker",
+        "sudo docker pull {{user `docker_image`}}",
+        "sudo docker run --rm -v /:/host {{user `docker_image`}} cp -R /app /host/opt/myapp"
       ]
-    }
-  ],
-  "post-processors": [
-    {
-      "type": "amazon-import",
-      "region": "us-west-2",
-      "s3_bucket_name": "my-bucket-ami-testing",
-      "ami_name": "linux-docker-ami-{{timestamp}}"
     }
   ]
 }
