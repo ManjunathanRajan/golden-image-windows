@@ -43,17 +43,16 @@ jobs:
 
     - name: Ensure packer-amazon-chroot directory exists
       run: |
-        sudo mkdir -p $RUNNER_TEMP/packer-amazon-chroot
-        sudo chown -R $(whoami):$(whoami) $RUNNER_TEMP/packer-amazon-chroot
-        ls -ld $RUNNER_TEMP/packer-amazon-chroot
+        sudo mkdir -p /tmp/packer-chroot
+        sudo chown -R $(whoami):$(whoami) /tmp/packer-chroot
+        ls -ld /tmp/packer-chroot
 
     - name: Create packer-chroot(/var/lock/) directory and set permissions
       run: |
         sudo mkdir -p /var/lock/packer-chroot
         sudo chown -R $(whoami):$(whoami) /var/lock/packer-chroot
 
-    - name: Validate Packer configuration
-      run: packer validate packer-linux-ami.json
-
-    - name: Build Linux AMI
-      run: packer build packer-linux-ami.json
+    - name: Validate and Build Linux AMI
+      run: |
+        packer validate packer-linux-ami.json
+        packer build packer-linux-ami.json

@@ -1,4 +1,7 @@
 {
+  "variables": {
+    "mount_path": "/tmp/packer-chroot"
+  },
   "builders": [
     {
       "type": "amazon-chroot",
@@ -14,13 +17,13 @@
       },
       "ami_name": "linux-docker-ami-{{timestamp}}",
       "mount_options": "bind",
-      "mount_path": "{{ .Env.RUNNER_TEMP }}/packer-amazon-chroot",
+      "mount_path": "{{ user `mount_path` }}",
       "chroot_mounts": [
-        ["proc", "proc", "{{ .Env.RUNNER_TEMP }}/packer-amazon-chroot/proc"],
-        ["sysfs", "sysfs", "{{ .Env.RUNNER_TEMP }}/packer-amazon-chroot/sys"],
-        ["bind", "/dev", "{{ .Env.RUNNER_TEMP }}/packer-amazon-chroot/dev"],
-        ["bind", "/dev/pts", "{{ .Env.RUNNER_TEMP }}/packer-amazon-chroot/dev/pts"],
-        ["bind", "/proc/sys/fs/binfmt_misc", "{{ .Env.RUNNER_TEMP }}/packer-amazon-chroot/proc/sys/fs/binfmt_misc"]
+        ["proc", "proc", "{{ user `mount_path` }}/proc"],
+        ["sysfs", "sysfs", "{{ user `mount_path` }}/sys"],
+        ["bind", "/dev", "{{ user `mount_path` }}/dev"],
+        ["bind", "/dev/pts", "{{ user `mount_path` }}/dev/pts"],
+        ["bind", "/proc/sys/fs/binfmt_misc", "{{ user `mount_path` }}/proc/sys/fs/binfmt_misc"]
       ],
       "command_wrapper": "sudo {{.Command}}",
       "copy_files": [
