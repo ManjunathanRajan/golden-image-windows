@@ -2,7 +2,7 @@
   "variables": {
     "aws_region": "us-west-2",
     "docker_image": "716514200744.dkr.ecr.us-west-2.amazonaws.com/packer-awsal2023:latest",
-    "ssh_password": "SuperS3cr3t!!!!"
+    "ssh_private_key_file": "C:\Users\I316454\Documents\awskeypairs\common.pem"
   },
   "builders": [
     {
@@ -20,8 +20,7 @@
       },
       "instance_type": "m5a.xlarge",
       "ssh_username": "ec2-user",
-      "ssh_password": "{{user `ssh_password`}}",
-      "ssh_agent_auth": false,
+      "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
       "ssh_timeout": "10m",
       "associate_public_ip_address": true,
       "ami_name": "packer-linux-demo-{{timestamp}}",
@@ -39,8 +38,7 @@
       },
       "temporary_security_group_source_cidrs": [
         "0.0.0.0/0"
-      ],
-      "user_data_file": "enable_password_ssh.sh"
+      ]
     }
   ],
   "provisioners": [
