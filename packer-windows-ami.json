@@ -1,52 +1,55 @@
 {
   "variables": {
-    "aws_region": "us-west-2",
-    "docker_image": "716514200744.dkr.ecr.us-west-2.amazonaws.com/packer-awsal2023:latest",
-    "ssh_password": "SuperS3cr3t!!!!"
+    "region": "us-west-2"
   },
   "builders": [
     {
       "type": "amazon-ebs",
-      "region": "{{user `aws_region`}}",
+      "name": "firstrun-windows",
+      "ami_name": "packer-windows-demo-{{timestamp}}",
+      "communicator": "winrm",
+      "instance_type": "m5a.xlarge",
+      "region": "{{user `region`}}",
       "source_ami_filter": {
         "filters": {
-          "virtualization-type": "hvm",
-          "name": "amzn2-ami-hvm-2.0.2021*-x86_64-gp2",
-          "root-device-type": "ebs"
+          "name": "Windows_Server-2019-English-Full-Base-*",
+          "root-device-type": "ebs",
+          "virtualization-type": "hvm"
         },
-        "owners": ["amazon"],
-        "most_recent": true
+        "most_recent": true,
+        "owners": ["amazon"]
       },
-      "instance_type": "t2.micro",
-      "ssh_username": "ec2-user",
-      "ssh_password": "{{user `ssh_password`}}",
-      "ssh_agent_auth": false,
-      "ami_name": "packer-awsal2023-{{timestamp}}",
-      "ami_description": "Packer build using latest ECR Docker image",
-      "launch_block_device_mappings": [
-        {
-          "device_name": "/dev/xvda",
-          "volume_size": 30,
-          "volume_type": "gp2",
-          "delete_on_termination": true
-        }
-      ],
-      "tags": {
-        "Name": "packer-awsal2023"
-      }
+      "user_data_file": "./bootstrap_win.txt",
+      "winrm_password": "SuperS3cr3t!!!!",
+      "winrm_username": "Administrator"
     }
   ],
   "provisioners": [
     {
-      "type": "shell",
+      "type": "powershell",
+      "environment_vars": [
+        "DEVOPS_LIFE_IMPROVER=PACKER"
+      ],
       "inline": [
-        "sudo yum update -y",
-        "sudo yum install -y docker",
-        "sudo systemctl start docker",
-        "sudo systemctl enable docker",
-        "sudo docker pull {{user `docker_image`}}",
-        "sudo docker run --rm -v /:/host {{user `docker_image`}} cp -R /app /host/opt/myapp"
+        "Write-Host \"HELLO NEW USER; WELCOME TO $Env:DEVOPS_LIFE_IMPROVER\"",
+        "Write-Host \"You need to use backtick escapes when using\"",
+        "Write-Host \"characters such as DOLLAR`$ directly in a command\"",
+        "Write-Host \"or in your own scripts.\""
       ]
+    },
+    {
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "pause_before": "3m",
+      "environment_vars": [
+        "VAR1=A$Dollar",
+        "VAR2=A`Backtick",
+        "VAR3=A'SingleQuote",
+        "VAR4=A\"DoubleQuote"
+      ],
+      "script": "./sample_script.ps1"
     }
   ]
 }
