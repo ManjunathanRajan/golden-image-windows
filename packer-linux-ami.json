@@ -19,7 +19,7 @@
         "owners": ["amazon"],
         "most_recent": true
       },
-      "instance_type": "t2.micro",
+      "instance_type": "m5a.xlarge",
       "ssh_username": "ec2-user",
       "ssh_password": "{{user `ssh_password`}}",
       "ssh_agent_auth": false,
