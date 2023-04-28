@@ -19,10 +19,12 @@
         "owners": ["amazon"],
         "most_recent": true
       },
-      "instance_type": "m5a.xlarge",
+      "instance_type": "t2.micro",
       "ssh_username": "ec2-user",
       "ssh_password": "{{user `ssh_password`}}",
       "ssh_agent_auth": false,
+      "ssh_timeout": "10m",
+      "associate_public_ip_address": true,
       "ami_name": "packer-awsal2023-{{timestamp}}",
       "ami_description": "Packer build using latest ECR Docker image",
       "launch_block_device_mappings": [
@@ -36,6 +38,9 @@
       "tags": {
         "Name": "packer-awsal2023"
       },
+      "temporary_security_group_source_cidrs": [
+        "0.0.0.0/0"
+      ],
       "user_data_file": "enable_password_ssh.sh"
     }
   ],
