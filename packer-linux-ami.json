@@ -7,6 +7,8 @@
   "builders": [
     {
       "type": "amazon-ebs",
+      "name": "firstrun-linux",
+      "ami_name": "packer-linux-demo-{{timestamp}}",
       "region": "{{user `aws_region`}}",
       "source_ami_filter": {
         "filters": {
