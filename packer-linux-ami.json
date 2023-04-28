@@ -2,8 +2,7 @@
   "variables": {
     "aws_region": "us-west-2",
     "docker_image": "716514200744.dkr.ecr.us-west-2.amazonaws.com/packer-awsal2023:latest",
-    "ssh_password": "SuperS3cr3t!!!!",
-    "ami_name": "packer-linux-demo-{{timestamp}}"
+    "ssh_password": "SuperS3cr3t!!!!"
   },
   "builders": [
     {
@@ -20,12 +19,12 @@
         "most_recent": true
       },
       "instance_type": "t2.micro",
-      "ssh_username": "ec2-user",
+      "ssh_username": "m5a.xlarge",
       "ssh_password": "{{user `ssh_password`}}",
       "ssh_agent_auth": false,
       "ssh_timeout": "10m",
       "associate_public_ip_address": true,
-      "ami_name": "packer-awsal2023-{{timestamp}}",
+      "ami_name": "packer-linux-demo-{{timestamp}}",
       "ami_description": "Packer build using latest ECR Docker image",
       "launch_block_device_mappings": [
         {
