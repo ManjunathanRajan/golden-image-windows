@@ -1,2 +1,2 @@
-# GI_AWS
+# golden-image-windows
 ## Building Golden Image using CI/CD pipeline...
