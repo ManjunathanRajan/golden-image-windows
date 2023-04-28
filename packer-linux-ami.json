@@ -2,7 +2,7 @@
   "variables": {
     "aws_region": "us-west-2",
     "docker_image": "716514200744.dkr.ecr.us-west-2.amazonaws.com/packer-awsal2023:latest",
-    "ssh_private_key_file": "C:/Users/I316454/Documents/awskeypairs/common.pem"
+    "ssh_private_key_file": "C:\\Users\\I316454\\Documents\\awskeypairs\\common.pem"
   },
   "builders": [
     {
