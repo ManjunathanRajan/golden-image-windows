@@ -20,7 +20,7 @@
         "most_recent": true
       },
       "instance_type": "t2.micro",
-      "ssh_username": "ec2-user",
+      "ssh_username": "m5a.xlarge",
       "ssh_password": "{{user `ssh_password`}}",
       "ssh_agent_auth": false,
       "ssh_timeout": "10m",
