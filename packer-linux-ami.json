@@ -1,6 +1,6 @@
 {
   "variables": {
-    "mount_path": "/tmp/packer-chroot"
+    "mount_path": "/tmp/packer-chroot/"
   },
   "builders": [
     {
