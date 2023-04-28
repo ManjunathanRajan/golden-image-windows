@@ -1,47 +1,31 @@
 {
   "variables": {
-    "mount_path": "/tmp/packer-chroot/"
+    "docker_image": "716514200744.dkr.ecr.us-west-2.amazonaws.com/packer-awsal2023:latest"
   },
   "builders": [
     {
-      "type": "amazon-chroot",
-      "region": "us-west-2",
-      "source_ami_filter": {
-        "filters": {
-          "virtualization-type": "hvm",
-          "name": "amzn2-ami-hvm-*-x86_64-gp2",
-          "root-device-type": "ebs"
-        },
-        "owners": ["amazon"],
-        "most_recent": true
-      },
-      "ami_name": "linux-docker-ami-{{timestamp}}",
-      "mount_options": "bind",
-      "mount_path": "{{ user `mount_path` }}",
-      "chroot_mounts": [
-        ["proc", "proc", "{{ user `mount_path` }}/proc"],
-        ["sysfs", "sysfs", "{{ user `mount_path` }}/sys"],
-        ["bind", "/dev", "{{ user `mount_path` }}/dev"],
-        ["bind", "/dev/pts", "{{ user `mount_path` }}/dev/pts"],
-        ["bind", "/proc/sys/fs/binfmt_misc", "{{ user `mount_path` }}/proc/sys/fs/binfmt_misc"]
-      ],
-      "command_wrapper": "sudo {{.Command}}",
-      "copy_files": [
-        "/etc/resolv.conf"
-      ],
-      "device_path": "/dev/sdb",
-      "root_volume_size": 20,
-      "force_deregister": true
+      "type": "docker",
+      "image": "{{ user `docker_image` }}",
+      "commit": true
     }
   ],
   "provisioners": [
     {
       "type": "shell",
-      "script": "./mount_chroot.sh"
-    },
+      "inline": [
+        "docker import {{.BuildName}}-{{.BuilderType}}.tar",
+        "docker run -d --name temp_container {{ user `docker_image` }}",
+        "docker cp temp_container:/ /mnt/docker_root",
+        "docker rm -f temp_container"
+      ]
+    }
+  ],
+  "post-processors": [
     {
-      "type": "shell",
-      "script": "./install_docker.sh"
+      "type": "amazon-import",
+      "region": "us-west-2",
+      "s3_bucket_name": "my-bucket-ami-testing",
+      "ami_name": "linux-docker-ami-{{timestamp}}"
     }
   ]
 }

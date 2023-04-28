@@ -6,10 +6,11 @@ on:
 env:
   AWS_REGION: us-west-2
   PRODUCT_VERSION: "1.8.6"
+  DOCKER_IMAGE: 716514200744.dkr.ecr.us-west-2.amazonaws.com/packer-awsal2023:latest
 
 jobs:
   build-linux-ami:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
@@ -26,7 +27,7 @@ jobs:
         unzip awscliv2.zip
         sudo ./aws/install --update
     - name: Install jq
-      run: sudo yum install -y jq
+      run: sudo apt-get update && sudo apt-get install -y jq
 
     - name: Set up Packer
       uses: hashicorp/setup-packer@v2.0.0
@@ -41,16 +42,14 @@ jobs:
         role-session-name: GitHub-Action-Role
         aws-region: ${{ env.AWS_REGION }}
 
-    - name: Ensure packer-amazon-chroot directory exists
+    - name: Login to Amazon ECR
+      id: login-ecr
       run: |
-        sudo mkdir -p /tmp/packer-chroot/
-        sudo chown -R $(whoami):$(whoami) /tmp/packer-chroot/
-        ls -ld /tmp/packer-chroot/
+        ECR_REGISTRY=$(echo ${{ env.DOCKER_IMAGE }} | cut -d'/' -f1)
+        aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_REGISTRY
 
-    - name: Create packer-chroot(/var/lock/) directory and set permissions
-      run: |
-        sudo mkdir -p /var/lock/packer-chroot
-        sudo chown -R $(whoami):$(whoami) /var/lock/packer-chroot
+    - name: Pull Docker image from ECR
+      run: docker pull ${{ env.DOCKER_IMAGE }}
 
     - name: Validate and Build Linux AMI
       run: |
