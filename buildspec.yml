@@ -11,7 +11,8 @@ phases:
       - sudo mv packer /usr/local/bin
       - echo "Fetching latest tag from os-release branch..."
       - chmod +x get_latest_tag.sh
-      - export GIT_TAG=$(./get_latest_tag.sh)
+      - ./get_latest_tag.sh > git_tag.txt
+      - export GIT_TAG=$(cat git_tag.txt)
       - echo "Checking out the specified Git tag: $GIT_TAG"
       - git checkout tags/$GIT_TAG
   build:
