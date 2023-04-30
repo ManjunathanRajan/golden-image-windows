@@ -9,20 +9,26 @@ phases:
       - rm -f packer.zip
       - chmod +x packer
       - sudo mv packer /usr/local/bin
+      - echo "Installing AWS CLI..."
+      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - unzip awscliv2.zip
+      - sudo ./aws/install
+  pre_build:
+    commands:
       - echo "Setting up SSH key for GitHub authentication..."
       - yum update -y && yum install -y jq
       - export SSH_PRIVATE_KEY=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:github-ssh-wfDtpS --query SecretString --output text | jq -r '.private_key')
       - echo "$SSH_PRIVATE_KEY" > private_key.pem
       - chmod 600 private_key.pem
-      - eval $(ssh-agent -s)
-      - ssh-add private_key.pem
+      - echo "Creating a custom SSH configuration file to use the private key..."
+      - echo -e "Host github.com\n  HostName github.com\n  User git\n  IdentityFile $(pwd)/private_key.pem\n  IdentitiesOnly yes" > ssh_config
       - echo "Cloning the repository using SSH..."
-      - git clone git@github.com:your-username/your-repo.git
+      - GIT_SSH_COMMAND="ssh -F $(pwd)/ssh_config" git clone git@github.com:your-username/your-repo.git
       - echo "Changing the working directory to the cloned repository..."
       - cd your-repo
       - echo "Setting Git user name and email for this repository..."
-      - git config user.email "you@example.com"
-      - git config user.name "Your Name"
+      - git config user.email "manjun566@gmail.com"
+      - git config user.name "ManjunathanRajan"
       - echo "Fetching the latest commit from the os-release branch..."
       - git fetch origin os-release
       - git checkout FETCH_HEAD
