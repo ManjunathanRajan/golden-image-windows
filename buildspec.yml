@@ -9,11 +9,23 @@ phases:
       - rm -f packer.zip
       - chmod +x packer
       - sudo mv packer /usr/local/bin
+      - echo "Fetching latest tag from os-release branch..."
+      - git fetch --tags origin os-release
+      - GIT_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+      - echo "Checking out the specified Git tag: $GIT_TAG"
+      - git checkout tags/$GIT_TAG
   build:
     commands:
       - echo "Building Windows Packer AMI..."
       - packer validate packer-windows-ami.json
       - packer build packer-windows-ami.json
+  post_build:
+    commands:
+      - echo "Switching to the main branch..."
+      - git checkout main
+      - echo "Adding the tag to the main branch..."
+      - git tag -a $GIT_TAG -m "Tag $GIT_TAG added from os-release branch"
+      - git push origin $GIT_TAG
 artifacts:
   files:
     - '**/*'
