@@ -9,8 +9,12 @@ phases:
       - rm -f packer.zip
       - chmod +x packer
       - sudo mv packer /usr/local/bin
+      - echo "Cloning the repository..."
+      - git clone https://github.com/ManjunathanRajan/golden-image-windows.git
+      - echo "Changing the working directory to the cloned repository..."
+      - cd your-repo
       - echo "Fetching the latest commit from the os-release branch..."
-      - git fetch origin os-release
+      - git fetch origin OS-Release
       - git checkout FETCH_HEAD
   build:
     commands:
