@@ -11,15 +11,17 @@ phases:
       - sudo mv packer /usr/local/bin
   pre_build:
     commands:
-      - echo "Setting up SSH key for GitHub authentication..."
+      - echo "Setting up Git credentials for GitHub authentication..."
       - yum update -y && yum install -y jq
-      - export SSH_PRIVATE_KEY=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:github-gpg-nOvMMy --query SecretString --output text | jq -r '.private_key')
-      - echo "$SSH_PRIVATE_KEY" > private_key.pem
-      - chmod 600 private_key.pem
-      - echo "Creating a custom SSH configuration file to use the private key..."
-      - echo -e "Host github.com\n  HostName github.com\n  User git\n  IdentityFile $(pwd)/private_key.pem\n  IdentitiesOnly yes" > ssh_config
-      - echo "Cloning the repository using SSH..."
-      - GIT_SSH_COMMAND="ssh -F $(pwd)/ssh_config" git clone git@github.com:ManjunathanRajan/golden-image-windows.git
+      - export GITHUB_USERNAME=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:gh-usr-pwd-eRsTUm --query SecretString --output text | jq -r '.username')
+      - export GITHUB_PASSWORD=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:gh-usr-pwd-eRsTUm --query SecretString --output text | jq -r '.password')
+      - git config --global credential.helper 'cache --timeout=3600'
+      - echo "Cloning the repository using Git credentials..."
+      - echo "protocol=https
+            host=github.com
+            username=$GITHUB_USERNAME
+            password=$GITHUB_PASSWORD" | git credential-cache store
+      - git clone https://github.com/ManjunathanRajan/golden-image-windows.git
       - echo "Changing the working directory to the cloned repository..."
       - cd golden-image-windows
       - echo "Setting Git user name and email for this repository..."
@@ -28,21 +30,17 @@ phases:
       - echo "Fetching the latest commit from the os-release branch..."
       - git fetch origin os-release
       - git checkout FETCH_HEAD
+      - echo "Creating a signed tag at the commit for the release..."
+      - NEW_TAG="GA-01"
+      - TAG_MESSAGE="Release $NEW_TAG"
+      - git tag -s $NEW_TAG -m "$TAG_MESSAGE"
+      - echo "Pushing the signed tag to the original GitHub repository..."
+      - git push origin $NEW_TAG
   build:
     commands:
       - echo "Building Windows Packer AMI..."
       - packer validate packer-windows-ami.json
       - packer build packer-windows-ami.json
-  post_build:
-    commands:
-    - echo "Creating a signed tag at the commit for the release..."
-    - git checkout main
-    - git pull origin main
-    - NEW_TAG="GA-01"
-    - TAG_MESSAGE="Release $NEW_TAG"
-    - git tag -s $NEW_TAG -m "$TAG_MESSAGE"
-    - echo "Pushing the signed tag to the remote repository..."
-    - git push origin $NEW_TAG
 artifacts:
   files:
     - '**/*'
