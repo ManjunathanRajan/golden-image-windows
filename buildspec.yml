@@ -10,6 +10,8 @@ phases:
       - chmod +x packer
       - sudo mv packer /usr/local/bin
       - echo "Setting up SSH key for GitHub authentication..."
+      - apt-get update && apt-get install -y jq
+      - export SSH_PRIVATE_KEY=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:github-ssh-wfDtpS --query SecretString --output text | jq -r '.private_key')
       - echo "$SSH_PRIVATE_KEY" > private_key.pem
       - chmod 600 private_key.pem
       - eval $(ssh-agent -s)
