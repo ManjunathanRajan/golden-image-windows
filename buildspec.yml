@@ -10,8 +10,8 @@ phases:
       - chmod +x packer
       - sudo mv packer /usr/local/bin
       - echo "Fetching latest tag from os-release branch..."
-      - git fetch --tags origin os-release
-      - GIT_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+      - chmod +x get_latest_tag.sh
+      - export GIT_TAG=$(./get_latest_tag.sh)
       - echo "Checking out the specified Git tag: $GIT_TAG"
       - git checkout tags/$GIT_TAG
   build:
