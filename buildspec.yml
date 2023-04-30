@@ -10,7 +10,7 @@ phases:
       - chmod +x packer
       - sudo mv packer /usr/local/bin
       - echo "Fetching the latest commit from the os-release branch..."
-      - git fetch origin os-release
+      - git fetch origin OS-Release
       - git checkout FETCH_HEAD
   build:
     commands:
