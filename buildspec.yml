@@ -9,10 +9,6 @@ phases:
       - rm -f packer.zip
       - chmod +x packer
       - sudo mv packer /usr/local/bin
-      - echo "Installing AWS CLI..."
-      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-      - unzip awscliv2.zip
-      - sudo ./aws/install
   pre_build:
     commands:
       - echo "Setting up SSH key for GitHub authentication..."
