@@ -15,11 +15,11 @@ phases:
       - yum update -y && yum install -y jq
       - export SSH_PRIVATE_KEY=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:github-ssh-wfDtpS --query SecretString --output text | jq -r '.private_key')
       - echo "$SSH_PRIVATE_KEY" > private_key.pem
-      - chmod 600 private_key.pem
+      - chmod 400 private_key.pem
       - echo "Creating a custom SSH configuration file to use the private key..."
       - echo -e "Host github.com\n  HostName github.com\n  User git\n  IdentityFile $(pwd)/private_key.pem\n  IdentitiesOnly yes" > ssh_config
       - echo "Cloning the repository using SSH..."
-      - GIT_SSH_COMMAND="ssh -F $(pwd)/ssh_config" git clone git@github.com:your-username/your-repo.git
+      - GIT_SSH_COMMAND="ssh -F $(pwd)/ssh_config" git clone git@github.com:ManjunathanRajan/golden-image-windows.git
       - echo "Changing the working directory to the cloned repository..."
       - cd your-repo
       - echo "Setting Git user name and email for this repository..."
