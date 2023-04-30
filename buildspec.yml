@@ -12,7 +12,7 @@ phases:
       - echo "Cloning the repository..."
       - git clone https://github.com/ManjunathanRajan/golden-image-windows.git
       - echo "Changing the working directory to the cloned repository..."
-      - cd your-repo
+      - cd golden-image-windows
       - echo "Fetching the latest commit from the os-release branch..."
       - git fetch origin OS-Release
       - git checkout FETCH_HEAD
