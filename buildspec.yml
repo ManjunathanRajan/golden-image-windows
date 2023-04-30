@@ -9,15 +9,20 @@ phases:
       - rm -f packer.zip
       - chmod +x packer
       - sudo mv packer /usr/local/bin
-      - echo "Cloning the repository..."
-      - git clone https://github.com/ManjunathanRajan/golden-image-windows.git
+      - echo "Setting up SSH key for GitHub authentication..."
+      - echo "$SSH_PRIVATE_KEY" > private_key.pem
+      - chmod 600 private_key.pem
+      - eval $(ssh-agent -s)
+      - ssh-add private_key.pem
+      - echo "Cloning the repository using SSH..."
+      - git clone git@github.com:your-username/your-repo.git
       - echo "Changing the working directory to the cloned repository..."
-      - cd golden-image-windows
+      - cd your-repo
       - echo "Setting Git user name and email for this repository..."
-      - git config user.email "manjun566@gmail.com"
-      - git config user.name "ManjunathanRajan"
+      - git config user.email "you@example.com"
+      - git config user.name "Your Name"
       - echo "Fetching the latest commit from the os-release branch..."
-      - git fetch origin OS-Release
+      - git fetch origin os-release
       - git checkout FETCH_HEAD
   build:
     commands:
