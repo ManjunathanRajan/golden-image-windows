@@ -11,16 +11,15 @@ phases:
       - sudo mv packer /usr/local/bin
   pre_build:
     commands:
-      - echo "Setting up Git credentials for GitHub authentication..."
+      - echo "Setting up Git authentication using PAT..."
       - yum update -y && yum install -y jq
-      - export GITHUB_USERNAME=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:gh-usr-pwd-eRsTUm --query SecretString --output text | jq -r '.username')
-      - export GITHUB_PASSWORD=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:gh-usr-pwd-eRsTUm --query SecretString --output text | jq -r '.password')
+      - export GITHUB_PAT=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:pat_gh-b7FRfI --query SecretString --output text | jq -r '.pat')
       - git config --global credential.helper 'cache --timeout=3600'
-      - echo "Cloning the repository using Git credentials..."
+      - echo "Cloning the repository using PAT..."
       - echo "protocol=https
             host=github.com
-            username=$GITHUB_USERNAME
-            password=$GITHUB_PASSWORD" | git credential-cache store
+            username=$GITHUB_PAT
+            password=x-oauth-basic" | git credential-cache store
       - git clone https://github.com/ManjunathanRajan/golden-image-windows.git
       - echo "Changing the working directory to the cloned repository..."
       - cd golden-image-windows
@@ -28,13 +27,13 @@ phases:
       - git config user.email "manjun566@gmail.com"
       - git config user.name "ManjunathanRajan"
       - echo "Fetching the latest commit from the os-release branch..."
-      - git fetch origin OS-Release
+      - git fetch origin os-release
       - git checkout FETCH_HEAD
-      - echo "Creating a signed tag at the commit for the release..."
+      - echo "Creating a tag at the commit for the release..."
       - NEW_TAG="GA-01"
       - TAG_MESSAGE="Release $NEW_TAG"
-      - git tag -s $NEW_TAG -m "$TAG_MESSAGE"
-      - echo "Pushing the signed tag to the original GitHub repository..."
+      - git tag $NEW_TAG -m "$TAG_MESSAGE"
+      - echo "Pushing the tag to the original GitHub repository..."
       - git push origin $NEW_TAG
   build:
     commands:
