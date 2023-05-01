@@ -44,7 +44,6 @@ phases:
     commands:
       - echo "Building Windows Packer AMI..."
       - packer validate packer-windows-ami.json
-      - packer build packer-windows-ami.json
       - packer build -var "ami_tag=$NEW_TAG" packer-windows-ami.json
 
 artifacts:
