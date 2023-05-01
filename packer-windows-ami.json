@@ -1,12 +1,13 @@
 {
   "variables": {
     "region": "us-west-2"
+    "ami_tag": "{{env `AMI_TAG`}}"
   },
   "builders": [
     {
       "type": "amazon-ebs",
       "name": "firstrun-windows",
-      "ami_name": "packer-windows-demo-{{timestamp}}",
+      "ami_name": "Golden Image Windows Server 2019-{{user `ami_tag`}}",
       "communicator": "winrm",
       "instance_type": "m5a.xlarge",
       "region": "{{user `region`}}",
