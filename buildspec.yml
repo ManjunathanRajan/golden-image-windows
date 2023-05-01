@@ -13,10 +13,8 @@ phases:
     commands:
       - echo "Setting up Git authentication using PAT..."
       - yum update -y && yum install -y python
-      - SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:pat_gh-b7FRfI --query SecretString --output text)
-      - echo "Raw secret value: $SECRET_VALUE"
-      - export GITHUB_PAT=$(echo $SECRET_VALUE | python -c "import sys, json; print(json.load(sys.stdin)['pat'])")
-      - echo "Extracted PAT: $GITHUB_PAT"
+      - SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:pat_gh-b7FRfI --query SecretString --output json)
+      - GITHUB_PAT=$(echo $SECRET_VALUE | python -c "import sys, json; print(json.loads(json.load(sys.stdin))['PAT'])")
       - git config --global credential.helper 'store --file .git-credentials'
       - echo "https://$GITHUB_PAT:x-oauth-basic@github.com" > .git-credentials
       - echo "Cloning the repository using PAT..."
