@@ -12,10 +12,18 @@ phases:
   pre_build:
     commands:
       - echo "Setting up Git authentication using PAT..."
-      - yum update -y && yum install -y jq
-      - export GITHUB_PAT=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:pat_gh-b7FRfI --query SecretString --output text | jq -r '.pat')
+      - yum update -y && yum install -y python
+      - SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:pat_gh-b7FRfI --query SecretString --output text)
+      - echo "Raw secret value: $SECRET_VALUE"
+      - export GITHUB_PAT=$(echo $SECRET_VALUE | python -c "import sys, json; print(json.load(sys.stdin)['pat'])")
+      - echo "Extracted PAT: $GITHUB_PAT"
+      - git config --global credential.helper 'cache --timeout=3600'
+      - echo "Storing PAT using git credential..."
+      - echo "url=https://github.com
+            username=$GITHUB_PAT
+            password=x-oauth-basic" | git credential-cache store
       - echo "Cloning the repository using PAT..."
-      - git clone https://${GITHUB_PAT}@github.com/ManjunathanRajan/golden-image-windows.git
+      - git clone https://github.com/ManjunathanRajan/golden-image-windows.git
       - echo "Changing the working directory to the cloned repository..."
       - cd golden-image-windows
       - echo "Setting Git user name and email for this repository..."
