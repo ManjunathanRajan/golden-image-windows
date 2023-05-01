@@ -40,8 +40,7 @@ phases:
       - echo "Pushing the new tag to the original GitHub repository..."
       - git push origin $NEW_TAG
       - echo "Creating a release on GitHub..."
-      - RELEASE_TITLE="Golden Image Windows Server 2019 - $NEW_TAG"
-      - curl -X POST -H "Authorization: token $GITHUB_PAT" -H "Content-Type: application/json" -d "{\"tag_name\":\"$NEW_TAG\",\"target_commitish\":\"main\",\"name\":\"$RELEASE_TITLE\"}" https://api.github.com/repos/ManjunathanRajan/golden-image-windows/releases
+      - curl -X POST -H "Authorization: token $GITHUB_PAT" -H "Content-Type: application/json" -d "{\"tag_name\":\"$NEW_TAG\",\"target_commitish\":\"main\",\"name\":\"Golden Image Windows Release $NEW_TAG\",\"body\":\"This is the release for Golden Image Windows version $NEW_TAG. This release includes the latest updates and improvements. Additional information: - Feature 1 - Feature 2 - Bugfixes\"}" https://api.github.com/repos/ManjunathanRajan/golden-image-windows/releases
 
   build:
     commands:
