@@ -26,8 +26,8 @@ phases:
       - echo "Setting Git user name and email for this repository..."
       - git config user.email "manjun566@gmail.com"
       - git config user.name "ManjunathanRajan"
-      - echo "Fetching the latest commit from the os-release branch..."
-      - git fetch origin os-release
+      - echo "Fetching the latest commit from the OS-Release branch..."
+      - git fetch origin OS-Release
       - git checkout FETCH_HEAD
       - echo "Creating a tag at the commit for the release..."
       - NEW_TAG="GA-01"
