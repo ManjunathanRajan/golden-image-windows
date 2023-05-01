@@ -7,7 +7,7 @@
     {
       "type": "amazon-ebs",
       "name": "firstrun-windows",
-      "ami_name": "packer-windows-demo-{{user `ami_tag`}}",
+      "ami_name": "Golden Image Windows Server 2019-{{user `ami_tag`}}",
       "communicator": "winrm",
       "instance_type": "m5a.xlarge",
       "region": "{{user `region`}}",
