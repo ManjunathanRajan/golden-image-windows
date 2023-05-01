@@ -19,9 +19,11 @@ phases:
       - echo "Extracted PAT: $GITHUB_PAT"
       - git config --global credential.helper 'cache --timeout=3600'
       - echo "Storing PAT using git credential..."
-      - echo "url=https://github.com
-            username=$GITHUB_PAT
-            password=x-oauth-basic" | git credential-cache store
+      - echo >(
+          url=https://github.com
+          username=$GITHUB_PAT
+          password=x-oauth-basic
+        ) | git credential-cache store
       - echo "Cloning the repository using PAT..."
       - git clone https://github.com/ManjunathanRajan/golden-image-windows.git
       - echo "Changing the working directory to the cloned repository..."
