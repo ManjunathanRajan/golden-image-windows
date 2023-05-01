@@ -14,22 +14,17 @@ phases:
       - echo "Setting up Git authentication using PAT..."
       - yum update -y && yum install -y jq
       - export GITHUB_PAT=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:pat_gh-b7FRfI --query SecretString --output text | jq -r '.pat')
-      - git config --global credential.helper 'cache --timeout=3600'
       - echo "Cloning the repository using PAT..."
-      - echo "protocol=https
-            host=github.com
-            username=$GITHUB_PAT
-            password=x-oauth-basic" | git credential-cache store
-      - git clone https://github.com/ManjunathanRajan/golden-image-windows.git
+      - git clone https://${GITHUB_PAT}@github.com/ManjunathanRajan/golden-image-windows.git
       - echo "Changing the working directory to the cloned repository..."
       - cd golden-image-windows
       - echo "Setting Git user name and email for this repository..."
       - git config user.email "manjun566@gmail.com"
       - git config user.name "ManjunathanRajan"
-      - echo "Fetching the latest commit from the OS-Release branch..."
-      - git fetch origin OS-Release
-      - git checkout FETCH_HEAD
-      - echo "Creating a tag at the commit for the release..."
+      - echo "Pulling the latest changes from the main branch..."
+      - git checkout main
+      - git pull origin main
+      - echo "Creating a tag at the latest commit..."
       - NEW_TAG="GA-01"
       - TAG_MESSAGE="Release $NEW_TAG"
       - git tag $NEW_TAG -m "$TAG_MESSAGE"
