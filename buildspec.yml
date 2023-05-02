@@ -13,7 +13,9 @@ phases:
   pre_build:
     commands:
       - echo "Setting up Git authentication using PAT..."
-      - yum update -y && yum install -y python
+      - yum update -y
+      - echo "Using Python 3..."
+      - python3 --version
       - SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:us-west-2:716514200744:secret:pat_gh-b7FRfI --query SecretString --output json)
       - GITHUB_PAT=$(echo $SECRET_VALUE | python -c "import sys, json; print(json.loads(json.load(sys.stdin))['PAT'])")
       - echo "Setting environment variable for Git authentication..."
