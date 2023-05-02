@@ -46,7 +46,7 @@ phases:
     commands:
       - echo "Building Windows Packer AMI..."
       - packer validate packer-windows-ami.json
-      - packer build -var "ami_tag=$NEW_TAG" -machine-readable packer-windows-ami.json > packer_output.json
+      - 'packer build -var "ami_tag=$NEW_TAG" -machine-readable packer-windows-ami.json > packer_output.json'
       - REGION=$(grep 'amazon-ebs:.*us-west-2' packer_output.json | awk -F '[: ]' '{print $2}')
       - AMI_ID=$(grep 'amazon-ebs:.*AMIs were created:' packer_output.json | awk -F '[: ]' '{print $8}')
       - echo "Making create_github_release.sh script executable..."
