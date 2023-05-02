@@ -47,9 +47,12 @@ phases:
       - echo "Building Windows Packer AMI..."
       - packer validate packer-windows-ami.json
       - packer build -var "ami_tag=$NEW_TAG" -machine-readable packer-windows-ami.json > packer_output.txt
+      - cat packer_output.txt
       - REGION=$(awk -F, '$4 == "region" {print $5}' packer_output.txt)
-      - AMI_ID=$(awk -F, '$4 == "artifact" && $5 == "0" && $6 == "id" {print $7}' packer_output.txt)
+      - echo "Extracted Region: $REGION"
       - export REGION
+      - AMI_ID=$(awk -F, '$4 == "artifact" && $5 == "0" && $6 == "id" {print $7}' packer_output.txt)
+      - echo "Extracted AMI ID: $AMI_ID"
       - export AMI_ID
       - echo "Making create_github_release.sh script executable..."
       - chmod +x create_github_release.sh
