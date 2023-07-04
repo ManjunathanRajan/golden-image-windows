@@ -1,2 +1,3 @@
 # golden-image-windows
 ## Building Golden Image using CI/CD pipeline...
+[image](https://github.com/ManjunathanRajan/golden-image-windows/blob/OS-Release/07byLBF5UaGsFsKtyOsENAg-24..v1651253326.jpg)
